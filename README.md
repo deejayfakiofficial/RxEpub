@@ -31,7 +31,7 @@ let vc = RxEpubPageController(url:url)
 navigationController?.pushViewController(vc, animated: true)
 ```
 
-### To run the example project, clone the repo, and run `pod install` from the Example directory first.
+To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
 
@@ -40,7 +40,7 @@ navigationController?.pushViewController(vc, animated: true)
 
 ## Installation
 
-### RxEpub is available through [CocoaPods](http://cocoapods.org). To install
+RxEpub is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
@@ -48,8 +48,8 @@ pod 'RxEpub'
 ```
 ## Author
 
-### izhoubin, 121160492@qq.com
+izhoubin, 121160492@qq.com
 
 ## License
 
-### RxEpub is available under the MIT license. See the [LICENSE](/LICENSE) file for more info.
+RxEpub is available under the MIT license. See the [LICENSE](/LICENSE) file for more info.
