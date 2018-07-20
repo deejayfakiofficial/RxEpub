@@ -26,12 +26,6 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'izhoubin' => '121160492@qq.com' }
   s.source           = { :git => 'https://github.com/izhoubin/RxEpub.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-
-  # s.ios.deployment_target = '9.0'
-  #
-  # s.source_files = 'RxEpub/Classes/**/*'
-
   s.swift_version = '4.0'
   s.ios.deployment_target = '9.0'
   # s.requires_arc  = true
@@ -60,8 +54,6 @@ Pod::Spec.new do |s|
       # rxEpubReader.source_files = 'RxEpub/Source/RxEpubReader/**/*'
       # rxEpubReader.public_header_files = 'RxEpub/Source/RxEpubReader/**/*.h'
   # end
-
-  # s.libraries  = "z"
   s.dependency 'SSZipArchive'
   s.dependency 'RxSwift'
   s.dependency 'RxCocoa'
