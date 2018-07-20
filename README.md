@@ -7,25 +7,31 @@
 
 ## Example
 
-You can load epub from local or remote files whether it's unziped or not.
+### You can load epub from local or remote files whether it's unziped or not.
 
-//1. Load local epub</br>
-//let url = Bundle.main.url(forResource: "330151", withExtension: "epub")
-
-//2. Load local epub (unziped)</br>
-//let url = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("Epubs").appendingPathComponent("330151")
-
-//3. Load remote epub</br>
-//let url = URL(string: "http://localhost/330151.epub")
-
-//4. Load remote epub （unziped）</br>
-//let url =  URL(string:"http://localhost/330151")
-
-let vc = RxEpubPageController(url:url)</br>
+#### 1. Load local epub
+```
+let url = Bundle.main.url(forResource: "330151", withExtension: "epub")
+```
+#### 2. Load local epub (unziped)
+```
+let url = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("Epubs").appendingPathComponent("330151")
+```
+#### 3. Load remote epub
+```
+/let url = URL(string: "http://localhost/330151.epub")
+```
+#### 4. Load remote epub （unziped）
+```
+let url =  URL(string:"http://localhost/330151")
+```
+####  open reader
+```
+let vc = RxEpubPageController(url:url)
 navigationController?.pushViewController(vc, animated: true)
+```
 
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+### To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
 
@@ -34,7 +40,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Installation
 
-RxEpub is available through [CocoaPods](http://cocoapods.org). To install
+### RxEpub is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
@@ -42,8 +48,8 @@ pod 'RxEpub'
 ```
 ## Author
 
-izhoubin, 121160492@qq.com
+### izhoubin, 121160492@qq.com
 
 ## License
 
-RxEpub is available under the MIT license. See the [LICENSE](/LICENSE) file for more info.
+### RxEpub is available under the MIT license. See the [LICENSE](/LICENSE) file for more info.
