@@ -1,15 +1,12 @@
 //
-//  FRSmil.swift
-//  Pods
+//  SmilElement.swift
+//  RxEpub
 //
-//  Created by Kevin Jantzer on 12/30/15.
+//  Created by zhoubin on 2018/4/3.
 //
-//
+
 
 import UIKit
-
-// Media Overlay Documentation
-// http://www.idpf.org/accessibility/guidelines/content/overlays/overview.php#mo005-samp
 
 
 class SmilElement: NSObject {

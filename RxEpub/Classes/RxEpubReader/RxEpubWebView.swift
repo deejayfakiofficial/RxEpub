@@ -7,12 +7,23 @@
 
 import UIKit
 import WebKit
+import RxSwift
+import RxCocoa
+extension Reactive where Base: WKWebView {
+    public var loading: Observable<Bool> {
+        return self.observeWeakly(Bool.self, "loading")
+            .map { $0 ?? false }
+    }
+    public var title: Observable<String> {
+        return self.observeWeakly(String.self, "title")
+            .map { $0 ?? "" }
+    }
+}
 public class RxEpubWebView: WKWebView {
     var tapCallBack:(()->())? = nil
     let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-    public convenience init(frame:CGRect = UIScreen.main.bounds) {
-//        let jsFileURL = Bundle(for: RxEpubReader.self).url(forResource: "Bridge", withExtension: "js")!
-//        let cssFileURL = Bundle(for: RxEpubReader.self).url(forResource: "Style", withExtension: "css")!
+    let bag = DisposeBag()
+    public convenience init(frame:CGRect) {
         let js = """
         var meta = document.createElement('meta');
         meta.setAttribute('name', 'viewport');
@@ -28,15 +39,18 @@ public class RxEpubWebView: WKWebView {
         var link = document.createElement('link');
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('href', 'App://RxEpub/Style.css');
-        
+
         document.getElementsByTagName('head')[0].appendChild(link);
+        var html = document.querySelector('html');
+        html.style['font-size']='16px';
+        html.style['height']='100%';
+        html.style['width']='100%';
+        html.style['-webkit-column-gap']='0px';
+        html.style['-webkit-column-width']=window.innerWidth+'px';
+
+        document.documentElement.style.webkitTouchCallout='none';
         """
-        //
-        //script.setAttribute('src', '\(jsFilePath)');
-        //script.innerHTML='\(jsStr)';
-        //link.setAttribute('href', '\(cssFilePath)');
-        //link.innerHTML='\(cssStr)';
-//        alert(document.getElementsByTagName('head')[0].innerHTML);
+        //'html','height: window.innerHeight; -webkit-column-gap: 0px; -webkit-column-width: window.innerWidth;
         let uerScript = WKUserScript(source: js, injectionTime: WKUserScriptInjectionTime.atDocumentEnd, forMainFrameOnly: true)
         let controller = WKUserContentController()
         controller.addUserScript(uerScript)
@@ -45,7 +59,7 @@ public class RxEpubWebView: WKWebView {
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         config.allowsInlineMediaPlayback = true
         config.preferences.javaScriptEnabled = true
-//        config.preferences.minimumFontSize = 15
+        //        config.preferences.minimumFontSize = 15
         config.processPool = WKProcessPool()
         
         if #available(iOS 10.0, *) {
@@ -54,6 +68,11 @@ public class RxEpubWebView: WKWebView {
             config.requiresUserActionForMediaPlayback = false
         }
         self.init(frame: frame, configuration: config)
+        
+        setUpUI()
+        setUpRx()
+    }
+    func setUpUI(){
         isOpaque = false
         uiDelegate = self
         navigationDelegate = self
@@ -69,19 +88,26 @@ public class RxEpubWebView: WKWebView {
         }
         indicator.hidesWhenStopped = true
         addSubview(indicator)
-//        let tapgs = UITapGestureRecognizer(target: self, action: #selector(click))
-//        tapgs.numberOfTapsRequired = 1
-//        tapgs.delegate = self
-//        addGestureRecognizer(tapgs)
     }
-    
-    @objc private func click(){
-        tapCallBack?()
+    func setUpRx(){
+        Observable.merge(scrollView.rx.didEndDecelerating.asObservable(),
+                         scrollView.rx.didEndScrollingAnimation.asObservable())
+            .subscribe(onNext: {[weak self] (_) in
+                guard let sf = self else{
+                    return
+                }
+                let pageIndex = sf.scrollView.contentOffset.x/sf.scrollView.frame.width
+                RxEpubReader.shared.currentPage.value = Int(pageIndex)
+            }).disposed(by: bag)
+        
+        NotificationCenter.default.rx.notification(Notification.Name.UIApplicationDidChangeStatusBarOrientation).subscribe(onNext: {[weak self] (_) in
+            self?.reload()
+        }).disposed(by: rx.disposeBag)
     }
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        indicator.center = self.center
+        indicator.center = CGPoint(x: self.center.x, y: self.center.y - 30)
     }
     
     public override init(frame: CGRect, configuration: WKWebViewConfiguration) {
@@ -97,20 +123,16 @@ public class RxEpubWebView: WKWebView {
         return super.load(request)
     }
 }
-//extension RxEpubWebView:UIGestureRecognizerDelegate{
-//    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-//        return true
-//    }
-//    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//        return true
-//    }
-//}
 extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         
     }
     //Alert弹框
     public func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        if UIApplication.shared.keyWindow?.rootViewController?.presentedViewController != nil {
+            completionHandler()
+            return
+        }
         let alert = UIAlertController(title: "温馨提示", message: message, preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "确定", style: UIAlertActionStyle.cancel) { (_) in
             completionHandler()
@@ -159,29 +181,27 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
             scrollsToTop()
         }
         indicator.stopAnimating()
+        let page = scrollView.contentOffset.x/scrollView.frame.width
+        RxEpubReader.shared.currentPage.value = Int(page)
     }
     func addCss(){
-
-        evaluateJavaScript("addCSS('html','height: \(frame.size.height-30)px; -webkit-column-gap: 0px; -webkit-column-width: \(frame.size.width)px;')", completionHandler: nil)
-        evaluateJavaScript("addCSS('html','font-size:\(RxEpubReader.shared.config.fontSize.value * 4.0/3.0)px')", completionHandler: nil)
         evaluateJavaScript("addCSS('html','color:\(RxEpubReader.shared.config.textColor.value)')", completionHandler: nil)
         evaluateJavaScript("addCSS('a','color:\(RxEpubReader.shared.config.textColor.value)')", completionHandler: nil)
-        if let imageName = RxEpubReader.shared.config.backgroundImage.value {
-            evaluateJavaScript("addCSS('html','background-image:url(App://RxEpub/\(imageName).jpg);background-size: 100% \(frame.size.height)px;')")
-        }
+//        evaluateJavaScript("addCSS('html','background-image:url(App://RxEpub/\(imageName).jpg);background-size: 100% \(frame.size.height)px;')")
     }
     
     func scrollsToBottom(){
         let js = """
-            var width = document.body.scrollWidth
-            window.scrollTo (width, 0);
-            """
+                document.body.scrollTop =  document.body.scrollHeight;
+                document.body.scrollLeft =  document.body.scrollWidth;
+                """
         evaluateJavaScript(js, completionHandler: nil)
     }
     func scrollsToTop(){
         let js = """
-            window.scrollTo (0, 0);
-            """
+                document.body.scrollTop =  0;
+                document.body.scrollLeft =  0;
+                """
         evaluateJavaScript(js, completionHandler: nil)
     }
 }

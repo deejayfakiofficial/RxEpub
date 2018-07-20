@@ -39,6 +39,12 @@
     ],
     "AEXML": [
 
+    ],
+    "NSObject+Rx": [
+
+    ],
+    "RxSwiftExt": [
+
     ]
   },
   "frameworks": "UIKit"

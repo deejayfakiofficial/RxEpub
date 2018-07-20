@@ -1,7 +1,7 @@
-var header = document.createElement('div');
-header.id="RxEpub_Header";
-var body=document.getElementsByTagName('body')[0];
-body.insertBefore(header,body.childNodes[0]);
+//var header = document.createElement('div');
+//header.id="RxEpub_Header";
+//var body=document.getElementsByTagName('body')[0];
+//body.insertBefore(header,body.childNodes[0]);
 
 function addCSS(selector, newRule){
     var sheet = document.styleSheets[0];

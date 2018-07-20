@@ -8,27 +8,14 @@
 import UIKit
 import RxSwift
 import RxCocoa
-enum ScrollType: Int {
-    case page
-    // `chapter` is only for the collection view if vertical with horizontal content is used
-    case chapter
-}
-
-enum ScrollDirection: Int {
-    case none
-    case right
-    case left
-}
-struct Page {
-    var chapter:Int
-    var page:Int
-}
+import RxSwiftExt
+import NSObject_Rx
 open class RxEpubPageController: UIViewController {
     var book:Book? = nil
     let bag = DisposeBag()
-    var collectionView:UICollectionView!
     let scrollDirection:Variable<ScrollDirection> = Variable(.none)
     let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    var pageViewController:UIPageViewController!
     var url:URL!
     public convenience init(url:URL) {
         self.init(nibName: nil, bundle: nil)
@@ -38,9 +25,19 @@ open class RxEpubPageController: UIViewController {
         super.viewDidLoad()
         
         setUpShemes()
-        setUpCollectionView()
+        setUpPageViewController()
         setUpIndicator()
         setUpRx()
+    }
+    func setUpPageViewController(){
+        let options = [UIPageViewControllerOptionSpineLocationKey:NSNumber(integerLiteral: UIPageViewControllerSpineLocation.min.rawValue)]
+        pageViewController = UIPageViewController(transitionStyle: UIPageViewControllerTransitionStyle.scroll, navigationOrientation: UIPageViewControllerNavigationOrientation.horizontal, options: options)
+        
+        addChildViewController(pageViewController)
+        view.addSubview(pageViewController.view)
+        pageViewController.didMove(toParentViewController: self)
+        pageViewController.delegate = self
+        pageViewController.dataSource = self
     }
     func setUpIndicator(){
         view.addSubview(indicator)
@@ -49,13 +46,14 @@ open class RxEpubPageController: UIViewController {
     }
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        indicator.center = view.center
+        indicator.center = CGPoint(x: view.center.x, y: view.center.y)
     }
     func setUpRx(){
-        let startOffset = collectionView.rx.willBeginDragging.map{[weak self] in
-            return self?.collectionView.contentOffset ?? CGPoint.zero
+        let startOffset = pageViewController.scrollView!.rx.willBeginDragging.map{[weak self] in
+            return self?.pageViewController.scrollView?.contentOffset ?? CGPoint.zero
         }
-        Observable.combineLatest(startOffset, collectionView.rx.contentOffset) { (p1, p2) -> ScrollDirection in
+        
+        Observable.combineLatest(startOffset, pageViewController.scrollView!.rx.contentOffset) { (p1, p2) -> ScrollDirection in
             if p1.x > p2.x{
                 return .right
             }else if p1.x < p2.x{
@@ -75,26 +73,27 @@ open class RxEpubPageController: UIViewController {
 
         RxEpubParser(url: url).parse().subscribe(onNext: {[weak self] (book) in
             self?.book = book
-            self?.collectionView.reloadData()
-            self?.indicator.stopAnimating()
-            }, onError: { (err) in
-                print(err)
-        }).disposed(by: bag)
-
-        Observable.combineLatest(RxEpubReader.shared.config.backgroundImage.asObservable(), RxEpubReader.shared.config.textColor.asObservable(),RxEpubReader.shared.config.fontSize.asObservable()).subscribe(onNext: {[weak self] (_) in
-            self?.collectionView.reloadData()
-        }).disposed(by: bag)
-
-        //为了保持统一，这里也设置同样的背景图
-        RxEpubReader.shared.config.backgroundImage.asObservable().subscribe(onNext: {[weak self] (imageName) in
-            if let imageName = imageName{
-                let bundle = Bundle(for: RxEpubReader.self)
-                let path = bundle.path(forResource: imageName, ofType: "jpg") ?? ""
-                self?.view.layer.contents = UIImage(contentsOfFile: path)?.cgImage
+            if let vc = self?.epubViewController(at: 0){
+                self?.pageViewController.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
+                self?.indicator.stopAnimating()
+                self?.indicator.removeFromSuperview()
             }
+        }, onError: { (err) in
+            print("Error",err)
         }).disposed(by: bag)
     }
-    
+    func pageIndex(for viewController:RxEpubViewController)->Int?{
+        return book?.spine.spineReferences.index(of: viewController.resource)
+    }
+    func epubViewController(at index:Int)->UIViewController?{
+        if let resources = book?.spine.spineReferences,
+            index >= 0,
+            index < resources.count{
+            let resource = resources[index]
+            return RxEpubViewController(resource: resource)
+        }
+        return nil
+    }
     func setUpShemes(){
         URLProtocol.registerClass(RxEpubURLProtocol.self)
         URLProtocol.wk_register(scheme: "http")
@@ -110,75 +109,57 @@ open class RxEpubPageController: UIViewController {
         URLProtocol.unregisterClass(RxEpubURLProtocol.self)
         RxEpubReader.remove()
     }
-    
-    func setUpCollectionView(){
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 0
-        layout.scrollDirection = .horizontal
-        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = UIColor.clear
-        collectionView.isPagingEnabled = true
-        collectionView.bounces = false
-        if #available(iOS 11, *) {
-            collectionView.contentInsetAdjustmentBehavior = .never
-        } else {
-            automaticallyAdjustsScrollViewInsets = false
-        }
-        view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        let left = NSLayoutConstraint(item: collectionView, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.left, multiplier: 1, constant: 0)
-        let right = NSLayoutConstraint(item: collectionView, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0)
-        let top = NSLayoutConstraint(item: collectionView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-        let bottom = NSLayoutConstraint(item: collectionView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
-        view.addConstraints([left,right,top,bottom])
-        
-        collectionView.register(RxEpubPageCell.self, forCellWithReuseIdentifier: "RxEpubPageCell")
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        let tapgs = UITapGestureRecognizer(target: self, action: #selector(tap))
-        tapgs.delegate = self
-        view.addGestureRecognizer(tapgs)
-    }
     @objc func tap(){
         RxEpubReader.shared.clickCallBack?()
     }
 }
-extension RxEpubPageController:UIGestureRecognizerDelegate{
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        return true
+extension RxEpubPageController:UIPageViewControllerDataSource,UIPageViewControllerDelegate{
+    public func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        let vc = viewController as! RxEpubViewController
+        if let index = pageIndex(for: vc){
+            return epubViewController(at: index + 1)
+        }
+        return nil
     }
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+    public func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        let vc = viewController as! RxEpubViewController
+        if let index = pageIndex(for: vc){
+            return epubViewController(at: index - 1)
+        }
+        return nil
+    }
+    public func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+        pageViewController.view.isUserInteractionEnabled = false
+    }
+    public func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        if finished && completed,
+            let vc = pageViewController.viewControllers?.first as? RxEpubViewController,
+            let index = pageIndex(for: vc) {
+            RxEpubReader.shared.currentChapter.value = index
+        }
+        pageViewController.view.isUserInteractionEnabled = true
     }
 }
-extension RxEpubPageController:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return book?.spine.spineReferences.count ?? 0
-    }
+extension UIPageViewController {
     
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RxEpubPageCell", for: indexPath) as! RxEpubPageCell
-        if let url = book?.spine.spineReferences[indexPath.row].url{
-            let req = URLRequest(url: url)
-            cell.webView.load(req)
-            cell.webView.scrollView.delegate = self
-            cell.webView.tapCallBack = {[weak self] in
-               self?.tap()
+    var scrollView: UIScrollView? {
+        get {
+            for subview in self.view.subviews {
+                if let scrollView = subview as? UIScrollView {
+                    return scrollView
+                }
             }
+            return nil
         }
-        return cell
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return UIScreen.main.bounds.size
-    }
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
     }
 }
 extension UIColor{
+    public static var random: UIColor {
+        let red = CGFloat(arc4random_uniform(255))/255.0
+        let green = CGFloat(arc4random_uniform(255))/255.0
+        let blue = CGFloat(arc4random_uniform(255))/255.0
+        return UIColor(red: red, green: green, blue: blue, alpha: 1)
+    }
     public convenience init?(hexString: String, transparency: CGFloat = 1) {
         var string = ""
         if hexString.lowercased().hasPrefix("0x") {
@@ -211,35 +192,3 @@ extension UIColor{
         self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: trans)
     }
 }
-//extension RxEpubPageController:UIScrollViewDelegate{
-//    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-//        pointNow = scrollView.contentOffset
-//        if scrollView is UICollectionView {
-//            print("跨章节翻页开始")
-//        }else{
-//            print("章节内翻页开始")
-//        }
-//    }
-//    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if scrollView is UICollectionView {
-//            print("跨章节翻页")
-//            print(scrollView.contentOffset.x/UIScreen.main.bounds.width)
-//        }else{
-//            print("章节内翻页")
-//        }
-//    }
-//    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-//
-//    }
-//    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-//
-//    }
-//    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-//        if scrollView is UICollectionView {
-//            print("跨章节翻页结束")
-//            print(scrollView.contentOffset.x/UIScreen.main.bounds.width)
-//        }else{
-//            print("章节内翻页结束")
-//        }
-//    }
-//}

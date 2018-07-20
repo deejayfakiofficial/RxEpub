@@ -12,5 +12,4 @@ public class RxEpubConfig: NSObject {
     public let backgroundColor = Variable("#cce8cf")
     public let textColor = Variable("#818181")
     public let fontSize:Variable<CGFloat> = Variable(14)
-    public let backgroundImage:Variable<String?> = Variable(nil)
 }

@@ -66,5 +66,8 @@ Pod::Spec.new do |s|
   s.dependency 'RxSwift'
   s.dependency 'RxCocoa'
   s.dependency 'AEXML'
+  s.dependency 'NSObject+Rx'
+  s.dependency 'RxSwiftExt'
   s.frameworks = 'UIKit'
+  
 end

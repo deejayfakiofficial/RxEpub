@@ -1,10 +1,10 @@
 //
 //  TocReference.swift
-//  FolioReaderKit
+//  RxEpub
 //
-//  Created by Heberti Almeida on 06/05/15.
-//  Copyright (c) 2015 Folio Reader. All rights reserved.
+//  Created by zhoubin on 2018/4/3.
 //
+
 
 import UIKit
 

@@ -25,47 +25,42 @@ public class RxEpubParser: NSObject {
             var isDir:ObjCBool = false
             if FileManager.default.fileExists(atPath: rootUrl.path, isDirectory: &isDir){
                 if isDir.boolValue == false{
-//                    print("本地未解压")
                     return unzip(from: rootUrl).flatMap({
                         return self.readContainer(rootUrl: $0)
                     })
                 }else{
-//                    print("本地已解压")
                     return readContainer(rootUrl: rootUrl)
                 }
             }else{
-                assertionFailure("指定路径文件不存在")
+                Log("Failed: file not exsit at url:\(rootUrl.absoluteString)")
                 return Observable.error(ParseError.fileNotExist(url: rootUrl.absoluteString))
             }
         }else{//远程文件
             if rootUrl.pathExtension == "epub"{
-//                print("远程未解压")
                 return download(url: rootUrl).flatMap({
                     self.unzip(from: $0)
                 }).flatMap{
                     self.readContainer(rootUrl: $0)
                 }
             }else{
-//                print("远程已解压")
                 return readContainer(rootUrl: rootUrl)
             }
         }
     }
     
     private func unzip(from url: URL)->Observable<URL>{
-//        print("解压：",url)
+        Log("unzip epub at path: \(url)")
         let unzipFile = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).last!.appendingPathComponent("Epubs").appendingPathComponent(rootUrl.deletingPathExtension().lastPathComponent)
         
         if SSZipArchive.unzipFile(atPath: url.path, toDestination: unzipFile.path, delegate: nil){
-//            print("解压成功:",unzipFile.path)
+            Log("unzip finished:\(unzipFile.path)")
             try? FileManager.default.removeItem(at: url)
             return Observable.just(unzipFile)
         }
-//        print("解压失败")
+        Log("unzip failed.")
         return Observable.error(ParseError.zip)
     }
     private func readContainer(rootUrl:URL)->Observable<Book>{
-//        print("开始读取内容",rootUrl)
         let containerPath = "META-INF/container.xml"
         let containerUrl = rootUrl.appendingPathComponent(containerPath)
         return read(url: containerUrl).flatMap {
@@ -108,7 +103,7 @@ public class RxEpubParser: NSObject {
     }
     @discardableResult
     private func read(url:URL) ->Observable<AEXMLDocument>{
-//        print("读取文件:",url)
+        Log("Parse file at: \(url)")
         return Observable.create { (observer) -> Disposable in
             if url.isFileURL{//本地文件
                 if !FileManager.default.fileExists(atPath: url.path){//文件不存在
@@ -128,7 +123,7 @@ public class RxEpubParser: NSObject {
                         observer.onCompleted()
                     }else{
                         observer.onError(ParseError.fileNotExist(url: url.absoluteString))
-                        assertionFailure("文件不存在")
+                        Log("Failed: file not exsit at url:\(url.absoluteString)")
                     }
                 }
                 task.resume()
@@ -140,7 +135,6 @@ public class RxEpubParser: NSObject {
     }
     @discardableResult
     private func parseContainer(container: AEXMLDocument) ->Observable<String>{
-//        print("解析container")
         let opfResource = Resource()
         opfResource.href = container.root["rootfiles"]["rootfile"].attributes["full-path"]
         guard let fullPath = container.root["rootfiles"]["rootfile"].attributes["full-path"] else {
@@ -152,7 +146,6 @@ public class RxEpubParser: NSObject {
     }
     
     private func parseOpf(opf:AEXMLDocument)->Observable<URL>{
-//        print("解析opf")
         var identifier: String?
         if let package = opf.children.first {
             identifier = package.attributes["unique-identifier"]
@@ -219,7 +212,6 @@ public class RxEpubParser: NSObject {
     /// - Returns: A list of toc references
     @discardableResult
     private func parseToc(toc:AEXMLDocument) -> Observable<[TocReference]> {
-//        print("解析toc")
         var tableOfContent = [TocReference]()
         var tocItems: [AEXMLElement]?
         guard let tocResource = book.tocResource else {

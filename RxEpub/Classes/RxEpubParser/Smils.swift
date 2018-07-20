@@ -1,9 +1,8 @@
 //
-//  Smils.swift
-//  Pods
+//  FRSmilFile.swift
+//  RxEpub
 //
-//  Created by Kevin Jantzer on 12/30/15.
-//
+//  Created by zhoubin on 2018/4/3.
 //
 
 
