@@ -9,19 +9,19 @@
 
 You can load epub from local or remote files whether it's unziped or not.
 
-//1. Load local epub
+//1. Load local epub</br>
 //let url = Bundle.main.url(forResource: "330151", withExtension: "epub")
 
-//2. Load local epub (unziped)
+//2. Load local epub (unziped)</br>
 //let url = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("Epubs").appendingPathComponent("330151")
 
-//3. Load remote epub
+//3. Load remote epub</br>
 //let url = URL(string: "http://localhost/330151.epub")
 
-//4. Load remote epub （unziped）
+//4. Load remote epub （unziped）</br>
 //let url =  URL(string:"http://localhost/330151")
 
-let vc = RxEpubPageController(url:url)
+let vc = RxEpubPageController(url:url)</br>
 navigationController?.pushViewController(vc, animated: true)
 
 
