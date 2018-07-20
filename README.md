@@ -19,7 +19,7 @@ let url = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDi
 ```
 #### 3. Load remote epub
 ```
-/let url = URL(string: "http://localhost/330151.epub")
+let url = URL(string: "http://localhost/330151.epub")
 ```
 #### 4. Load remote epub （unziped）
 ```

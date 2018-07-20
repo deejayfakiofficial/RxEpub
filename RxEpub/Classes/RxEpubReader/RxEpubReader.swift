@@ -29,6 +29,7 @@ public class RxEpubReader: NSObject {
     public let currentPage:Variable<Int> = Variable(0)
     public var config:RxEpubConfig! = RxEpubConfig()
     public var clickCallBack:(()->())? = nil
+    public var book:Book? = nil
     public static var shared:RxEpubReader{
         if reader == nil{
             reader = RxEpubReader()

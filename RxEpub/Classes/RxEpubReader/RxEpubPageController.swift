@@ -11,8 +11,6 @@ import RxCocoa
 import RxSwiftExt
 import NSObject_Rx
 open class RxEpubPageController: UIViewController {
-    var book:Book? = nil
-    let bag = DisposeBag()
     let scrollDirection:Variable<ScrollDirection> = Variable(.none)
     let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     var pageViewController:UIPageViewController!
@@ -65,14 +63,14 @@ open class RxEpubPageController: UIViewController {
             if direction != .none{
                 RxEpubReader.shared.scrollDirection = direction
             }
-        }).disposed(by: bag)
+        }).disposed(by: rx.disposeBag)
         
         RxEpubReader.shared.config.backgroundColor.asObservable().subscribe(onNext:{[weak self] in
             self?.view.backgroundColor = UIColor(hexString: $0)
-        }).disposed(by: bag)
+        }).disposed(by: rx.disposeBag)
 
         RxEpubParser(url: url).parse().subscribe(onNext: {[weak self] (book) in
-            self?.book = book
+            RxEpubReader.shared.book = book
             if let vc = self?.epubViewController(at: 0){
                 self?.pageViewController.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
                 self?.indicator.stopAnimating()
@@ -80,13 +78,13 @@ open class RxEpubPageController: UIViewController {
             }
         }, onError: { (err) in
             print("Error",err)
-        }).disposed(by: bag)
+        }).disposed(by: rx.disposeBag)
     }
     func pageIndex(for viewController:RxEpubViewController)->Int?{
-        return book?.spine.spineReferences.index(of: viewController.resource)
+        return RxEpubReader.shared.book?.spine.spineReferences.index(of: viewController.resource)
     }
     func epubViewController(at index:Int)->UIViewController?{
-        if let resources = book?.spine.spineReferences,
+        if let resources = RxEpubReader.shared.book?.spine.spineReferences,
             index >= 0,
             index < resources.count{
             let resource = resources[index]
