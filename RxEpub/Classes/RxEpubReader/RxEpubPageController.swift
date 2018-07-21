@@ -15,13 +15,16 @@ open class RxEpubPageController: UIViewController {
     let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     var pageViewController:UIPageViewController!
     var url:URL!
-    public convenience init(url:URL) {
-        self.init(nibName: nil, bundle: nil)
+    public init(url:URL) {
+        super.init(nibName: nil, bundle: nil)
         self.url = url
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     override open func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpShemes()
         setUpPageViewController()
         setUpIndicator()
@@ -78,6 +81,15 @@ open class RxEpubPageController: UIViewController {
             }
         }, onError: { (err) in
             print("Error",err)
+        }).disposed(by: rx.disposeBag)
+        
+        Observable.combineLatest(RxEpubReader.shared.config.fontSize.asObservable(), RxEpubReader.shared.config.textColor.asObservable()).skip(1).subscribe(onNext: {[weak self] (_,_) in
+            guard let sf = self,let vcs = sf.pageViewController.viewControllers as? [RxEpubViewController] else{
+                return
+            }
+            for vc in vcs{
+                vc.webView.updateCss()
+            }
         }).disposed(by: rx.disposeBag)
     }
     func pageIndex(for viewController:RxEpubViewController)->Int?{

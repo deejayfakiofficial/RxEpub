@@ -32,11 +32,14 @@ class ViewController: UIViewController {
         let vc = RxEpubPageController(url:url)
         navigationController?.pushViewController(vc, animated: true)
         RxEpubReader.shared.config.backgroundColor.value = "#C7EDCC"
-        RxEpubReader.shared.config.textColor.value = "#525252"
+        RxEpubReader.shared.config.textColor.value = "#ff0000"
+        RxEpubReader.shared.config.fontSize.value = 14
         RxEpubReader.shared.clickCallBack = {[weak self] in
             let isHidden = self?.navigationController?.isNavigationBarHidden ?? false
             self?.navigationController?.setNavigationBarHidden(!isHidden, animated: true)
             UIApplication.shared.isStatusBarHidden = !isHidden
+            RxEpubReader.shared.config.fontSize.value = 16
+            RxEpubReader.shared.config.textColor.value = "#0000ff"
         }
         RxEpubReader.shared.currentChapter.asObservable().subscribe(onNext: { (chapter) in
             Log("chapter: \(chapter)")

@@ -14,26 +14,14 @@
 /* ePUB */
 html {
     -webkit-text-size-adjust: none; /* Never autoresize text */
-/*    padding: 0px 10px !important;*/
-/*    overflow: hidden;*/
-/*    height:100%;*/
-/*    width:100%;*/
-/*    -webkit-column-gap: 1%;*/
-/*    -webkit-column-width: 100%;*/
-/*    background-color:red;*/
-/*    background-image:url('羊皮纸.jpg');*/
-/*        background-size: 100% 812px;*/
-/*    background-repeat:repeat-y;*/
+    height:100%;
+    width:100%;
+    -webkit-column-gap:0;
 
 }
 
 body {
     padding: 0px 20px;
-/*    overflow: hidden !important;*/
-/*    background-image:url(羊皮纸.jpg);*/
-/*        background-size: 100% 812px;*/
-/*    background-repeat:repeat-y;*/
-/*    background-color:blue;*/
 }
 p, span, div {
     font-size: 1em;

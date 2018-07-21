@@ -9,7 +9,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 public class RxEpubConfig: NSObject {
-    public let backgroundColor = Variable("#cce8cf")
-    public let textColor = Variable("#818181")
+    public let backgroundColor = Variable("#ffffff")
+    public let textColor = Variable("#666666")
     public let fontSize:Variable<CGFloat> = Variable(14)
 }

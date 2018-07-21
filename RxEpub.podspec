@@ -26,9 +26,9 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'izhoubin' => '121160492@qq.com' }
   s.source           = { :git => 'https://github.com/izhoubin/RxEpub.git', :tag => s.version.to_s }
-  s.swift_version = '4.0'
+  s.swift_version = '4.1'
   s.ios.deployment_target = '9.0'
-  # s.requires_arc  = true
+  s.requires_arc  = true
   s.authors = { 'izhoubin' => '121160492@qq.com' }
   s.source_files = [
     'RxEpub/Classes/*.{h,swift}',

@@ -4,6 +4,7 @@
 [![Version](https://img.shields.io/cocoapods/v/RxEpub.svg?style=flat)](http://cocoapods.org/pods/RxEpub)
 [![License](https://img.shields.io/cocoapods/l/RxEpub.svg?style=flat)](http://cocoapods.org/pods/RxEpub)
 [![Platform](https://img.shields.io/cocoapods/p/RxEpub.svg?style=flat)](http://cocoapods.org/pods/RxEpub)
+[![Swift](https://img.shields.io/badge/Swift-4.1-brightgreen.svg)](http://cocoapods.org/pods/RxEpub)
 
 ## Example
 
@@ -25,7 +26,7 @@ let url = URL(string: "http://localhost/330151.epub")
 ```
 let url =  URL(string:"http://localhost/330151")
 ```
-####  open reader
+####  Open reader
 ```
 let vc = RxEpubPageController(url:url)
 navigationController?.pushViewController(vc, animated: true)

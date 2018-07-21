@@ -41,11 +41,8 @@ public class RxEpubWebView: WKWebView {
         link.setAttribute('href', 'App://RxEpub/Style.css');
 
         document.getElementsByTagName('head')[0].appendChild(link);
+
         var html = document.querySelector('html');
-        html.style['font-size']='16px';
-        html.style['height']='100%';
-        html.style['width']='100%';
-        html.style['-webkit-column-gap']='0px';
         html.style['-webkit-column-width']=window.innerWidth+'px';
 
         document.documentElement.style.webkitTouchCallout='none';
@@ -174,7 +171,7 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
         print("didFailnavigation:",error)
     }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        addCss()
+        updateCss()
         if RxEpubReader.shared.scrollDirection == .right {
             scrollsToBottom()
         }else{
@@ -184,10 +181,22 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
         let page = scrollView.contentOffset.x/scrollView.frame.width
         RxEpubReader.shared.currentPage.value = Int(page)
     }
-    func addCss(){
-        evaluateJavaScript("addCSS('html','color:\(RxEpubReader.shared.config.textColor.value)')", completionHandler: nil)
-        evaluateJavaScript("addCSS('a','color:\(RxEpubReader.shared.config.textColor.value)')", completionHandler: nil)
-//        evaluateJavaScript("addCSS('html','background-image:url(App://RxEpub/\(imageName).jpg);background-size: 100% \(frame.size.height)px;')")
+    func updateCss(){
+        let js = """
+        var html = document.querySelector('html');
+        html.style['color']='\(RxEpubReader.shared.config.textColor.value)';
+        html.style['font-size']='\(RxEpubReader.shared.config.fontSize.value/3.0*4.0)'+'px'
+        var a = document.querySelector('a');
+        if (a){
+            a['color']='\(RxEpubReader.shared.config.textColor.value)';
+            a.style['font-size']='\(RxEpubReader.shared.config.fontSize.value/3.0*4.0)'+'px'
+        }
+        """
+        evaluateJavaScript(js, completionHandler: {_,err in
+            if err != nil{
+                Log(err)
+            }
+        })
     }
     
     func scrollsToBottom(){
