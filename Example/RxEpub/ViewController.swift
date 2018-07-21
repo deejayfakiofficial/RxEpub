@@ -42,11 +42,11 @@ class ViewController: UIViewController {
             RxEpubReader.shared.config.textColor.value = "#0000ff"
         }
         RxEpubReader.shared.currentChapter.asObservable().subscribe(onNext: { (chapter) in
-            Log("chapter: \(chapter)")
+            print("chapter: \(chapter)")
         }).disposed(by: bag)
         
         RxEpubReader.shared.currentPage.asObservable().subscribe(onNext: { (page) in
-            Log("page: \(page)")
+            print("page: \(page)")
         }).disposed(by: bag)
     }
 }

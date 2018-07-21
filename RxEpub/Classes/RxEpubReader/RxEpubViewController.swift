@@ -14,7 +14,7 @@ class RxEpubViewController: UIViewController {
     let titleLab = UILabel()
     let batteryIndicator = BatteryView()
     let timeLab = UILabel()
-    let color = UIColor(hexString: "#888888")!
+    let color = UIColor(hexString: "#818181")!
     weak var timer:Timer? = nil
     init(resource:Resource){
         super.init(nibName: nil, bundle: nil)
@@ -31,8 +31,8 @@ class RxEpubViewController: UIViewController {
         setUpWebView()
         setUpBattery()
         setUpTimeLab()
-        loadData()
         setUpGesture()
+        loadData()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

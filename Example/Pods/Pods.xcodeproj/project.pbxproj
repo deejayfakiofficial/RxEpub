@@ -176,7 +176,6 @@
 		4BD5A5187C30E48E4D79A71D7D1CF1D1 /* RxEpubReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5148FB79ACA95C20B47C51AA7DF7A74E /* RxEpubReader.swift */; };
 		4D2A67AD97F1D44E26795588826428A7 /* RxCollectionViewReactiveArrayDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2F4ED61F28ACDD5E5181255480D081 /* RxCollectionViewReactiveArrayDataSource.swift */; };
 		4D6A5C247A4231BE340694EF2D08883E /* Enumerated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4E0D7C213527E951D5705224645BC3 /* Enumerated.swift */; };
-		4D81A2D438B704EB864B739E6F290DA9 /* RxEpubURLProtocol+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2F186E3CA2FE0DE7EE930A9ECCE1C8 /* RxEpubURLProtocol+Ex.swift */; };
 		4DB97C9A5D2D1EDE209F6013A356F39B /* NSObject+Rx+RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7773762C6C1E2363E31E68B762BD3EE /* NSObject+Rx+RawRepresentable.swift */; };
 		4E8D0CF0BB6D8D9E6F37A6E1BC95F5A2 /* PriorityQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD463247CBEB22357C4EE32CC6954E /* PriorityQueue.swift */; };
 		4E8DD92A7269B3F1E8825F86C29DC3BE /* UIPickerView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0EDC466C9D461DDE949940BF113FD5 /* UIPickerView+Rx.swift */; };
@@ -289,6 +288,7 @@
 		8821497513AD4202B96983F8BFE698EA /* RxSwiftExt-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 0127C89861417DA38BE60C843BD60060 /* RxSwiftExt-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8858739A21007D3F00FEEB12 /* RxEpubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8858739921007D3F00FEEB12 /* RxEpubViewController.swift */; };
 		88D45C9E2101C47000212286 /* BatteryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D45C9D2101C47000212286 /* BatteryView.swift */; };
+		88D45CA52103308600212286 /* Extesions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D45CA42103308600212286 /* Extesions.swift */; };
 		89050145E64B8AE10B233E8B0F9BB5A9 /* ObservableConvertibleType+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5336FD0D06D046FB316882567A59032F /* ObservableConvertibleType+Signal.swift */; };
 		8923BF7F72C93DB7DAE0FC02ACA8364E /* RxCocoa.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2D829B74DE402FFEBD50AF94AA512D /* RxCocoa.swift */; };
 		89ECDEB09FE1838BC8428448B530A186 /* Platform.Darwin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010E0D59C5B9816C2EDFDF34A691AFF4 /* Platform.Darwin.swift */; };
@@ -687,7 +687,6 @@
 		0A066B55045F928A06DA60B7FB0C3038 /* SSZipArchive.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SSZipArchive.h; path = SSZipArchive/SSZipArchive.h; sourceTree = "<group>"; };
 		0B6E93D364D0E9B67932B1A16CC7E29B /* pwd2key.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = pwd2key.h; path = SSZipArchive/minizip/aes/pwd2key.h; sourceTree = "<group>"; };
 		0BE33DD3D881C01DB617C90DC7A4D493 /* PublishSubject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PublishSubject.swift; path = RxSwift/Subjects/PublishSubject.swift; sourceTree = "<group>"; };
-		0C2F186E3CA2FE0DE7EE930A9ECCE1C8 /* RxEpubURLProtocol+Ex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "RxEpubURLProtocol+Ex.swift"; sourceTree = "<group>"; };
 		0C730449761E13FC7E8CB75BD68C5020 /* aesopt.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = aesopt.h; path = SSZipArchive/minizip/aes/aesopt.h; sourceTree = "<group>"; };
 		0D9315A567FE18E7B3CEA0778964F63C /* TakeUntil.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TakeUntil.swift; path = RxSwift/Observables/TakeUntil.swift; sourceTree = "<group>"; };
 		0DC74CA8541CA2F101589DF8DCB68D2F /* XCTestObservationCenter+Register.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "XCTestObservationCenter+Register.m"; path = "Sources/NimbleObjectiveC/XCTestObservationCenter+Register.m"; sourceTree = "<group>"; };
@@ -964,6 +963,7 @@
 		8858739921007D3F00FEEB12 /* RxEpubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxEpubViewController.swift; sourceTree = "<group>"; };
 		889E139CF8B81731366F4032AD9FDD07 /* NSObject+Rx-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NSObject+Rx-umbrella.h"; sourceTree = "<group>"; };
 		88D45C9D2101C47000212286 /* BatteryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatteryView.swift; sourceTree = "<group>"; };
+		88D45CA42103308600212286 /* Extesions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extesions.swift; sourceTree = "<group>"; };
 		89129C15E8C94A32A2574DB149B79ED7 /* CwlBadInstructionException.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CwlBadInstructionException.swift; path = Carthage/Checkouts/CwlPreconditionTesting/Sources/CwlPreconditionTesting/CwlBadInstructionException.swift; sourceTree = "<group>"; };
 		89B1285369F972D85B72EA695DA815E3 /* UITabBarItem+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UITabBarItem+Rx.swift"; path = "RxCocoa/iOS/UITabBarItem+Rx.swift"; sourceTree = "<group>"; };
 		89B19176E94CAB44B22CF7C0993613A6 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1356,9 +1356,9 @@
 				DD812B29C50215FAA77D5C79F3237523 /* RxEpubPageController.swift */,
 				8858739921007D3F00FEEB12 /* RxEpubViewController.swift */,
 				D4D591402F48AD5078FA2765FB40C595 /* RxEpubURLProtocol.swift */,
-				0C2F186E3CA2FE0DE7EE930A9ECCE1C8 /* RxEpubURLProtocol+Ex.swift */,
 				29F3431F3C331FCB1849FE2BB19A643B /* RxEpubWebView.swift */,
 				88D45C9D2101C47000212286 /* BatteryView.swift */,
+				88D45CA42103308600212286 /* Extesions.swift */,
 			);
 			name = RxEpubReader;
 			path = RxEpub/Classes/RxEpubReader;
@@ -2724,12 +2724,12 @@
 				098072B8C5BBB953B2332734270FD4EE /* RxEpubPageController.swift in Sources */,
 				2B42D450546C795B29B616DBDBDED59F /* RxEpubParser.swift in Sources */,
 				4BD5A5187C30E48E4D79A71D7D1CF1D1 /* RxEpubReader.swift in Sources */,
-				4D81A2D438B704EB864B739E6F290DA9 /* RxEpubURLProtocol+Ex.swift in Sources */,
 				55DCB6F51531375034ED08D1AD5E04D9 /* RxEpubURLProtocol.swift in Sources */,
 				51E427928ED79498FA367622E0FF0662 /* RxEpubWebView.swift in Sources */,
 				EC6E1DA1E539BDFDC55DF21DA8B600EB /* SmilElement.swift in Sources */,
 				B24FD21EB5C85B755CB0EAB9BF8492EA /* Smils.swift in Sources */,
 				86CA8634905B379A054DE88F0CBB478D /* Spine.swift in Sources */,
+				88D45CA52103308600212286 /* Extesions.swift in Sources */,
 				2FE5F8B899DF16D54025B6A43A4EFC23 /* TocReference.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

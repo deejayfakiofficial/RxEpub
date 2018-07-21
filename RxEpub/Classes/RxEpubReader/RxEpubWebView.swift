@@ -9,16 +9,6 @@ import UIKit
 import WebKit
 import RxSwift
 import RxCocoa
-extension Reactive where Base: WKWebView {
-    public var loading: Observable<Bool> {
-        return self.observeWeakly(Bool.self, "loading")
-            .map { $0 ?? false }
-    }
-    public var title: Observable<String> {
-        return self.observeWeakly(String.self, "title")
-            .map { $0 ?? "" }
-    }
-}
 public class RxEpubWebView: WKWebView {
     var tapCallBack:(()->())? = nil
     let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)

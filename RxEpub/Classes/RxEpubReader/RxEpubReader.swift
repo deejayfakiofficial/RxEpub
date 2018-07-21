@@ -41,9 +41,11 @@ public class RxEpubReader: NSObject {
     }
 }
 
-public func Log<T>(_ object: T?, filename: String = #file, line: Int = #line, funcname: String = #function) {
+internal func Log<T>(_ object: T?, filename: String = #file, line: Int = #line, funcname: String = #function) {
     #if DEBUG
-    
+    if RxEpubReader.shared.config.logEnabled == false {
+        return
+    }
     let fmt = DateFormatter()
     fmt.dateFormat = "HH:mm:ss"
     let dateStr = fmt.string(from: Date())
