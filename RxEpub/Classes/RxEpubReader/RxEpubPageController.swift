@@ -150,9 +150,9 @@ extension RxEpubPageController:UIPageViewControllerDataSource,UIPageViewControll
         pageViewController.view.isUserInteractionEnabled = true
     }
 }
-extension UIPageViewController {
+internal extension UIPageViewController {
     
-    var scrollView: UIScrollView? {
+    internal var scrollView: UIScrollView? {
         get {
             for subview in self.view.subviews {
                 if let scrollView = subview as? UIScrollView {
@@ -163,14 +163,14 @@ extension UIPageViewController {
         }
     }
 }
-extension UIColor{
-    public static var random: UIColor {
+internal extension UIColor{
+    internal static var random: UIColor {
         let red = CGFloat(arc4random_uniform(255))/255.0
         let green = CGFloat(arc4random_uniform(255))/255.0
         let blue = CGFloat(arc4random_uniform(255))/255.0
         return UIColor(red: red, green: green, blue: blue, alpha: 1)
     }
-    public convenience init?(hexString: String, transparency: CGFloat = 1) {
+    internal convenience init?(hexString: String, transparency: CGFloat = 1) {
         var string = ""
         if hexString.lowercased().hasPrefix("0x") {
             string =  hexString.replacingOccurrences(of: "0x", with: "")
