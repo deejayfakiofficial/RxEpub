@@ -33,9 +33,18 @@ public class RxEpubWebView: WKWebView {
         head.appendChild(link);
 
         var html = document.querySelector('html');
-        html.style['-webkit-column-width']=window.innerWidth+'px';
-
+        html.style['-webkit-column-width']=window.innerWidth+'px'
+        
+        html.style['color']='\(RxEpubReader.shared.config.textColor.value)';
+        html.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value/3.0*4.0))'+'px';
+        var a = document.querySelector('a');
+        if (a){
+            a['color']='\(RxEpubReader.shared.config.textColor.value)';
+            a.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value/3.0*4.0))'+'px'
+        }
+        
         document.documentElement.style.webkitTouchCallout='none';
+        
         """
         //'html','height: window.innerHeight; -webkit-column-gap: 0px; -webkit-column-width: window.innerWidth;
         let uerScript = WKUserScript(source: js, injectionTime: WKUserScriptInjectionTime.atDocumentEnd, forMainFrameOnly: true)
@@ -161,7 +170,6 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
         print("didFailnavigation:",error)
     }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        updateCss()
         if RxEpubReader.shared.scrollDirection == .right {
             scrollsToBottom()
         }else{
@@ -175,11 +183,11 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
         let js = """
         var html = document.querySelector('html');
         html.style['color']='\(RxEpubReader.shared.config.textColor.value)';
-        html.style['font-size']='\(RxEpubReader.shared.config.fontSize.value/3.0*4.0)'+'px'
+        html.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value))'+'px'
         var a = document.querySelector('a');
         if (a){
             a['color']='\(RxEpubReader.shared.config.textColor.value)';
-            a.style['font-size']='\(RxEpubReader.shared.config.fontSize.value/3.0*4.0)'+'px'
+            a.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value))'+'px'
         }
         """
         evaluateJavaScript(js, completionHandler: {_,err in

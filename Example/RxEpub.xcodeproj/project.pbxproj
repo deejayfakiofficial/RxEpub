@@ -15,7 +15,6 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		7D0C4F8B16E009449436914C /* Pods_RxEpub_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC315036EB2506691B9231C5 /* Pods_RxEpub_Example.framework */; };
 		885865AC2069E9000027CE4C /* 330151.epub in Resources */ = {isa = PBXBuildFile; fileRef = 885865AB2069E9000027CE4C /* 330151.epub */; };
-		88A9279120FCA7CC005F5B04 /* 背景图.png in Resources */ = {isa = PBXBuildFile; fileRef = 88A9279020FCA7CC005F5B04 /* 背景图.png */; };
 		AC4EE655A2C78DAF92F0B3CC /* Pods_RxEpub_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AFB3B0956653E49207351A1 /* Pods_RxEpub_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,7 +45,6 @@
 		62A97AD89812071C6453A02F /* Pods-RxEpub_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxEpub_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-RxEpub_Example/Pods-RxEpub_Example.release.xcconfig"; sourceTree = "<group>"; };
 		8804391ED28B8E8565D3AE89 /* RxEpub.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = RxEpub.podspec; path = ../RxEpub.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		885865AB2069E9000027CE4C /* 330151.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = 330151.epub; sourceTree = "<group>"; };
-		88A9279020FCA7CC005F5B04 /* 背景图.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景图.png"; sourceTree = "<group>"; };
 		88D45C9F2101D2A600212286 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		88D45CA02101D2A700212286 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		8AFB3B0956653E49207351A1 /* Pods_RxEpub_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxEpub_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,7 +103,6 @@
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
-				88A9279020FCA7CC005F5B04 /* 背景图.png */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 			);
 			name = "Example for RxEpub";
@@ -259,7 +256,6 @@
 			files = (
 				885865AC2069E9000027CE4C /* 330151.epub in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
-				88A9279120FCA7CC005F5B04 /* 背景图.png in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);

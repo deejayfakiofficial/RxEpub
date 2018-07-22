@@ -1,32 +1,28 @@
 
 * {
     margin: 0 !important;
-/*    padding: 0px !important;*/
     vertical-align: baseline;
     page-break-before: initial !important;
     -webkit-user-select: text;
 }
-#RxEpub_Header{
-    height:50px;
-    -webkit-column-span:all;
-}
 
-/* ePUB */
 html {
     -webkit-text-size-adjust: none; /* Never autoresize text */
     height:100%;
     width:100%;
     -webkit-column-gap:0;
-
 }
 
 body {
     padding: 0px 20px;
+    word-break: break-word !important;
+    -webkit-hyphens: auto !important;
+    hyphens: auto !important;
 }
-p, span, div {
-    font-size: 1em;
-    line-height: 1.5 !important;
-    text-align: justify !important;
+
+p, span, div ,ul ,li ,a,ol,textarea,input,dl,dd,dt{
+    line-height:1.7em !important;
+    font-size: 1em !important;
 }
 img, svg, audio, video {
     max-height: 95% !important;
@@ -43,50 +39,25 @@ a {
     -webkit-touch-callout: none;
     pointer-events:none;
     cursor:default；
-} /* Disable link callback */
-
-p {
-    margin: 1.3em 0 1.5em 0;
-    line-height: 1.40em !important;
-/*    text-indent: 1.25em !important;*/
-}
-h1 ,h2 ,h3 ,h4 ,h5 ,h6 {
-    text-align: -webkit-auto;
-    text-rendering: optimizelegibility;
-    line-height: 1.2;
-}
-a, h1, h2, h3, h4, h5, h6 {
-    word-break: break-word !important;
-    -webkit-hyphens: none !important;
-}
-
-div { max-width: 100%; }
-highlight {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 2em !important;
 }
 h2 {
-    font-size: 1.5em;
+    font-size: 1.5em !important;
 }
 h3 {
-    font-size: 1.17em;
+    font-size: 1.17em !important;
 }
 h4 {
-    font-size: 1em;
+    font-size: 1em !important;
 }
 h5 {
-    font-size: 0.83em;
+    font-size: 0.83em !important;
 }
 h6 {
-    font-size: 0.67em;
+    font-size: 0.67em !important;
 }
-body {
-    word-break: break-word !important;
-    -webkit-hyphens: auto !important;
-    hyphens: auto !important;
-}
+
 

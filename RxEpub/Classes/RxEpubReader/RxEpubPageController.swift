@@ -23,6 +23,7 @@ open class RxEpubPageController: UIViewController {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     override open func viewDidLoad() {
         super.viewDidLoad()
         setUpShemes()
@@ -50,6 +51,17 @@ open class RxEpubPageController: UIViewController {
         indicator.center = CGPoint(x: view.center.x, y: view.center.y)
     }
     func setUpRx(){
+        RxEpubParser(url: url).parse().subscribe(onNext: {[weak self] (book) in
+            RxEpubReader.shared.book.value = book
+            if let vc = self?.epubViewController(at: 0){
+                self?.pageViewController.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
+                self?.indicator.stopAnimating()
+                self?.indicator.removeFromSuperview()
+            }
+            self?.title = book.title
+        }).disposed(by: rx.disposeBag)
+        
+        
         let startOffset = pageViewController.scrollView!.rx.willBeginDragging.map{[weak self] in
             return self?.pageViewController.scrollView?.contentOffset ?? CGPoint.zero
         }
@@ -72,16 +84,7 @@ open class RxEpubPageController: UIViewController {
             self?.view.backgroundColor = UIColor(hexString: $0)
         }).disposed(by: rx.disposeBag)
 
-        RxEpubParser(url: url).parse().subscribe(onNext: {[weak self] (book) in
-            RxEpubReader.shared.book = book
-            if let vc = self?.epubViewController(at: 0){
-                self?.pageViewController.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
-                self?.indicator.stopAnimating()
-                self?.indicator.removeFromSuperview()
-            }
-        }, onError: { (err) in
-            print("Error",err)
-        }).disposed(by: rx.disposeBag)
+        
         
         Observable.combineLatest(RxEpubReader.shared.config.fontSize.asObservable(), RxEpubReader.shared.config.textColor.asObservable()).skip(1).subscribe(onNext: {[weak self] (_,_) in
             guard let sf = self,let vcs = sf.pageViewController.viewControllers as? [RxEpubViewController] else{
@@ -91,12 +94,20 @@ open class RxEpubPageController: UIViewController {
                 vc.webView.updateCss()
             }
         }).disposed(by: rx.disposeBag)
+        
+        RxEpubReader.shared.catalogItemClickCallBack = {[weak self] in
+            guard let resource = $0.resource else {
+                return
+            }
+            let vc = RxEpubViewController(resource: resource)
+            self?.pageViewController.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
+        }
     }
     func pageIndex(for viewController:RxEpubViewController)->Int?{
-        return RxEpubReader.shared.book?.spine.spineReferences.index(of: viewController.resource)
+        return RxEpubReader.shared.book.value?.spine.spineReferences.index(of: viewController.resource)
     }
     func epubViewController(at index:Int)->UIViewController?{
-        if let resources = RxEpubReader.shared.book?.spine.spineReferences,
+        if let resources = RxEpubReader.shared.book.value?.spine.spineReferences,
             index >= 0,
             index < resources.count{
             let resource = resources[index]

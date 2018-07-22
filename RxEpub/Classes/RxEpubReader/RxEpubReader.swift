@@ -25,11 +25,13 @@ public class RxEpubReader: NSObject {
     private static var reader:RxEpubReader? = nil
     
     var scrollDirection:ScrollDirection = .none
+    var catalogItemClickCallBack:((TocReference)->())? = nil
+    
     public let currentChapter:Variable<Int> = Variable(0)
     public let currentPage:Variable<Int> = Variable(0)
     public var config:RxEpubConfig! = RxEpubConfig()
     public var clickCallBack:(()->())? = nil
-    public var book:Book? = nil
+    public var book:Variable<Book?> = Variable(nil)
     public static var shared:RxEpubReader{
         if reader == nil{
             reader = RxEpubReader()
