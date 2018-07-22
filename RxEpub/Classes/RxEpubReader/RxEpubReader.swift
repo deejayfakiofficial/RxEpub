@@ -25,7 +25,7 @@ public class RxEpubReader: NSObject {
     private static var reader:RxEpubReader? = nil
     
     var scrollDirection:ScrollDirection = .none
-    var catalogItemClickCallBack:((TocReference)->())? = nil
+    public var catalogItemClickCallBack:((TocReference)->())? = nil
     
     public let currentChapter:Variable<Int> = Variable(0)
     public let currentPage:Variable<Int> = Variable(0)

@@ -10,7 +10,7 @@ public class RxEpubCatalogViewController: UIViewController {
 
     let tableView = UITableView()
     var dataArray:[TocReference] = []
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         setUpTable()
         RxEpubReader.shared.book.asObservable().unwrap().subscribe(onNext: {[weak self] (book) in
@@ -26,7 +26,7 @@ public class RxEpubCatalogViewController: UIViewController {
         }
         
     }
-    @objc func close(){
+    @objc open func close(){
         if self.presentingViewController != nil{
             dismiss(animated: true, completion: nil)
         }else{
@@ -60,7 +60,7 @@ public class RxEpubCatalogViewController: UIViewController {
         tableView.rx.itemSelected.subscribe(onNext: {[weak self](indexPath) in
             if let md = self?.dataArray[indexPath.section].children[indexPath.row]{
                 RxEpubReader.shared.catalogItemClickCallBack?(md)
-                self?.dismiss(animated: true, completion: nil)
+                self?.close()
             }
         }).disposed(by: rx.disposeBag)
     }

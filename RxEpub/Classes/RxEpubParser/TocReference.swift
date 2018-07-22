@@ -9,8 +9,7 @@
 import UIKit
 
 open class TocReference: NSObject {
-    var children: [TocReference]!
-
+    public var children: [TocReference]!
     public var title: String!
     public var resource: Resource?
     public var fragmentID: String?
