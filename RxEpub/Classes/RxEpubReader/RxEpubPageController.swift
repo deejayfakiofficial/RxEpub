@@ -109,13 +109,11 @@ open class RxEpubPageController: UIViewController {
         URLProtocol.wk_register(scheme: "http")
         URLProtocol.wk_register(scheme: "https")
         URLProtocol.wk_register(scheme: "file")
-        URLProtocol.wk_register(scheme: "App")
     }
     deinit {
         URLProtocol.wk_unregister(scheme: "http")
         URLProtocol.wk_unregister(scheme: "https")
         URLProtocol.wk_unregister(scheme: "file")
-        URLProtocol.wk_unregister(scheme: "App")
         URLProtocol.unregisterClass(RxEpubURLProtocol.self)
         RxEpubReader.remove()
     }

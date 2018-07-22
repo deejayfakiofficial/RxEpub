@@ -10,8 +10,7 @@ private let KHybridNSURLProtocolHKey = "KHybridNSURLProtocol"
 class RxEpubURLProtocol: URLProtocol,URLSessionDelegate,URLSessionDataDelegate,URLSessionTaskDelegate {
     var rxTask: URLSessionTask? = nil
     override class func canInit(with request: URLRequest) -> Bool{
-        if request.url?.scheme?.lowercased() == "app",
-            request.url?.host == "RxEpub"{
+        if request.url?.host?.lowercased() == "rxepub"{
             if URLProtocol.property(forKey: KHybridNSURLProtocolHKey, in: request) != nil{
                 return false
             }

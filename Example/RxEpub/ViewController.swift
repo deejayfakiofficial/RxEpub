@@ -22,12 +22,12 @@ class ViewController: UIViewController {
         //let url = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("Epubs").appendingPathComponent("330151")
         
         //3. Load remote epub
-        let url = URL(string: "http://d18.ixdzs.com/113/113933/113933.epub")!
+//        let url = URL(string: "http://d18.ixdzs.com/113/113933/113933.epub")!
         //let url = URL(string: "http://localhost/330151.epub")
         
         //4. Load remote epub （unziped）
         //let url =  URL(string:"http://localhost/330151")
-//        let url = URL(string:"http://mebookj.magook.com/epub1/14887/14887-330151/330151_08e3035f")!
+        let url = URL(string:"http://mebookj.magook.com/epub1/14887/14887-330151/330151_08e3035f")!
         
         let vc = RxEpubPageController(url:url)
         navigationController?.pushViewController(vc, animated: true)

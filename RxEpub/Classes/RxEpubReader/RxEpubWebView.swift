@@ -15,22 +15,22 @@ public class RxEpubWebView: WKWebView {
     let bag = DisposeBag()
     public convenience init(frame:CGRect) {
         let js = """
+        var head = document.querySelector('head');
+
         var meta = document.createElement('meta');
         meta.setAttribute('name', 'viewport');
         meta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        
+        head.appendChild(meta);
+
         var script = document.createElement('script');
         script.setAttribute('type', 'text/javascript');
-        script.setAttribute('src', 'App://RxEpub/Bridge.js');
-        
-        document.getElementsByTagName('head')[0].appendChild(script);
+        script.setAttribute('src', 'https://RxEpub/Bridge.js');
+        head.appendChild(script);
         
         var link = document.createElement('link');
         link.setAttribute('rel', 'stylesheet');
-        link.setAttribute('href', 'App://RxEpub/Style.css');
-
-        document.getElementsByTagName('head')[0].appendChild(link);
+        link.setAttribute('href', 'https://RxEpub/Style.css');
+        head.appendChild(link);
 
         var html = document.querySelector('html');
         html.style['-webkit-column-width']=window.innerWidth+'px';
