@@ -183,11 +183,11 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
         let js = """
         var html = document.querySelector('html');
         html.style['color']='\(RxEpubReader.shared.config.textColor.value)';
-        html.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value))'+'px'
+        html.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value/3.0*4.0))'+'px'
         var a = document.querySelector('a');
         if (a){
             a['color']='\(RxEpubReader.shared.config.textColor.value)';
-            a.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value))'+'px'
+            a.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value/3.0*4.0))'+'px'
         }
         """
         evaluateJavaScript(js, completionHandler: {_,err in
