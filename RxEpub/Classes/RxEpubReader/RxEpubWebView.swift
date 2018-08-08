@@ -99,6 +99,27 @@ public class RxEpubWebView: WKWebView {
         NotificationCenter.default.rx.notification(Notification.Name.UIApplicationDidChangeStatusBarOrientation).subscribe(onNext: {[weak self] (_) in
             self?.reload()
         }).disposed(by: rx.disposeBag)
+        
+        rx.loading.asObservable().subscribe(onNext: {[weak self] in
+            guard let sf = self,!$0 else{
+                return
+            }
+            if RxEpubReader.shared.scrollDirection == .right {
+                sf.scrollsToBottom()
+            }else{
+                sf.scrollsToTop()
+            }
+            sf.indicator.stopAnimating()
+            
+        }).disposed(by: rx.disposeBag)
+        
+        scrollView.rx.contentOffset.subscribe(onNext: {[weak self] in
+            guard let sf = self,sf.scrollView.frame.width > 0 else{
+                return
+            }
+            let page = $0.x/sf.scrollView.frame.width
+            RxEpubReader.shared.currentPage.value = Int(page)
+        }).disposed(by: rx.disposeBag)
     }
     
     public override func layoutSubviews() {
@@ -170,14 +191,15 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
         print("didFailnavigation:",error)
     }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        if RxEpubReader.shared.scrollDirection == .right {
-            scrollsToBottom()
-        }else{
-            scrollsToTop()
-        }
-        indicator.stopAnimating()
-        let page = scrollView.contentOffset.x/scrollView.frame.width
-        RxEpubReader.shared.currentPage.value = Int(page)
+//        if RxEpubReader.shared.scrollDirection == .right {
+//            scrollsToBottom()
+//        }else{
+//            scrollsToTop()
+//        }
+//        indicator.stopAnimating()
+//        let page = scrollView.contentOffset.x/scrollView.frame.width
+//        Log("p2:\(page)")
+//        RxEpubReader.shared.currentPage.value = Int(page)
     }
     func updateCss(){
         let js = """
@@ -195,6 +217,21 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
                 Log(err)
             }
         })
+    }
+    func scrollTo(page:Int){
+        
+        rx.loading.asObservable().subscribe(onNext: {[weak self] in
+            guard let sf = self ,!$0 else{
+                return
+            }
+            
+            DispatchQueue.main.async {
+                let js = """
+                document.body.scrollTo(\(sf.scrollView.frame.width * CGFloat(page)),0);
+                """
+                self?.evaluateJavaScript(js, completionHandler:nil)
+            }
+        }).disposed(by: rx.disposeBag)
     }
     
     func scrollsToBottom(){

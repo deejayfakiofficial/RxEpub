@@ -106,9 +106,12 @@ public class RxEpubParser: NSObject {
         Log("Parse file at: \(url)")
         return Observable.create { (observer) -> Disposable in
             if url.isFileURL{//本地文件
+                //处理命名空间
+                var options = AEXMLOptions()
+                options.parserSettings.shouldProcessNamespaces = true
                 if !FileManager.default.fileExists(atPath: url.path){//文件不存在
                     observer.onError(ParseError.fileNotExist(url:url.absoluteString.removingPercentEncoding ?? ""))
-                }else if let data = try? Data(contentsOf: url, options: .alwaysMapped), let xmlDoc = try? AEXMLDocument(xml: data) {//正常解析
+                }else if let data = try? Data(contentsOf: url, options: .alwaysMapped), let xmlDoc = try? AEXMLDocument(xml: data,options:options) {//正常解析
                     observer.onNext(xmlDoc)
                     observer.onCompleted()
                 }else{//解析失败
