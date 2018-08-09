@@ -14,6 +14,7 @@ open class RxEpubPageController: UIViewController {
     let scrollDirection:Variable<ScrollDirection> = Variable(.none)
     let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     var pageViewController:UIPageViewController!
+    var currentViewController:RxEpubViewController? = nil
     var url:URL!
     public init(url:URL) {
         super.init(nibName: nil, bundle: nil)
@@ -180,6 +181,11 @@ extension RxEpubPageController:UIPageViewControllerDataSource,UIPageViewControll
             let vc = pageViewController.viewControllers?.first as? RxEpubViewController,
             let index = pageIndex(for: vc) {
             RxEpubReader.shared.currentChapter.value = index
+            vc.webView.rx.loading.asObservable().subscribe(onNext: {
+                if !$0{
+                    vc.webView.catulatePage()
+                }
+            }).disposed(by: rx.disposeBag)
         }
         pageViewController.view.isUserInteractionEnabled = true
     }

@@ -92,8 +92,7 @@ public class RxEpubWebView: WKWebView {
                 guard let sf = self else{
                     return
                 }
-                let pageIndex = sf.scrollView.contentOffset.x/sf.scrollView.frame.width
-                RxEpubReader.shared.currentPage.value = Int(pageIndex)
+                sf.catulatePage()
             }).disposed(by: bag)
         
         NotificationCenter.default.rx.notification(Notification.Name.UIApplicationDidChangeStatusBarOrientation).subscribe(onNext: {[weak self] (_) in
@@ -109,17 +108,17 @@ public class RxEpubWebView: WKWebView {
             }else{
                 sf.scrollsToTop()
             }
+            
             sf.indicator.stopAnimating()
             
         }).disposed(by: rx.disposeBag)
-        
-        scrollView.rx.contentOffset.subscribe(onNext: {[weak self] in
-            guard let sf = self,sf.scrollView.frame.width > 0 else{
-                return
-            }
-            let page = $0.x/sf.scrollView.frame.width
-            RxEpubReader.shared.currentPage.value = Int(page)
-        }).disposed(by: rx.disposeBag)
+    }
+    func catulatePage(){
+        guard scrollView.frame.width > 0 else{
+            return
+        }
+        let pageIndex = scrollView.contentOffset.x/scrollView.frame.width
+        RxEpubReader.shared.currentPage.value = Int(pageIndex)
     }
     
     public override func layoutSubviews() {
@@ -200,6 +199,7 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
 //        let page = scrollView.contentOffset.x/scrollView.frame.width
 //        Log("p2:\(page)")
 //        RxEpubReader.shared.currentPage.value = Int(page)
+//        catulatePage()
     }
     func updateCss(){
         let js = """

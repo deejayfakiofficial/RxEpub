@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         RxEpubReader.shared.config.backgroundColor.value = "#C7EDCC"
         RxEpubReader.shared.config.textColor.value = "#888888"
         RxEpubReader.shared.config.fontSize.value = 14
-        RxEpubReader.shared.config.logEnabled = true
+        RxEpubReader.shared.config.logEnabled = false
         RxEpubReader.shared.clickCallBack = {[weak self] in
             let isHidden = self?.navigationController?.isNavigationBarHidden ?? false
             self?.navigationController?.setNavigationBarHidden(!isHidden, animated: true)
