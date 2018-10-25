@@ -64,8 +64,7 @@ open class RxEpubPageController: UIViewController {
         addChildViewController(pageViewController)
         view.addSubview(pageViewController.view)
         pageViewController.didMove(toParentViewController: self)
-        pageViewController.delegate = self
-        pageViewController.dataSource = self
+        
     }
     func setUpIndicator(){
         view.addSubview(indicator)
@@ -84,8 +83,26 @@ open class RxEpubPageController: UIViewController {
                 self?.pageViewController.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
                 self?.indicator.stopAnimating()
                 self?.indicator.removeFromSuperview()
+                self?.pageViewController.delegate = self
+                self?.pageViewController.dataSource = self
             }
             self?.title = book.title
+            },onError:{[weak self] _ in
+                self?.indicator.stopAnimating()
+                self?.indicator.removeFromSuperview()
+                let lab = UILabel()
+                lab.translatesAutoresizingMaskIntoConstraints = false
+                lab.text = "找不到文件!"
+                lab.textColor = UIColor.gray
+                self?.view.addSubview(lab)
+                lab.sizeToFit()
+                guard let sf = self else{
+                    return
+                }
+                let centerX = NSLayoutConstraint(item: lab, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: sf.view, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
+                let centerY = NSLayoutConstraint(item: lab, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: sf.view, attribute: NSLayoutAttribute.centerY, multiplier: 1, constant: 0)
+                sf.view.addConstraints([centerX,centerY])
+                NSLayoutConstraint.activate([centerX,centerY])
         }).disposed(by: rx.disposeBag)
         
         
@@ -101,16 +118,16 @@ open class RxEpubPageController: UIViewController {
             }else{
                 return .none
             }
-        }.subscribe(onNext: { (direction) in
-            if direction != .none{
-                RxEpubReader.shared.scrollDirection = direction
-            }
-        }).disposed(by: rx.disposeBag)
+            }.subscribe(onNext: { (direction) in
+                if direction != .none{
+                    RxEpubReader.shared.scrollDirection = direction
+                }
+            }).disposed(by: rx.disposeBag)
         
         RxEpubReader.shared.config.backgroundColor.asObservable().subscribe(onNext:{[weak self] in
             self?.view.backgroundColor = UIColor(hexString: $0)
         }).disposed(by: rx.disposeBag)
-
+        
         Observable.combineLatest(RxEpubReader.shared.config.fontSize.asObservable(), RxEpubReader.shared.config.textColor.asObservable()).skip(1).subscribe(onNext: {[weak self] (_,_) in
             guard let sf = self,let vcs = sf.pageViewController.viewControllers as? [RxEpubViewController] else{
                 return
