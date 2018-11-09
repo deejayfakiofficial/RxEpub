@@ -1,24 +1,26 @@
 PODS:
-  - AEXML (4.3.0)
-  - Nimble (7.1.3)
-  - "NSObject+Rx (4.3.0)":
+  - AEXML (4.3.3)
+  - Nimble (7.3.1)
+  - "NSObject+Rx (4.4.1)":
+    - RxSwift (~> 4.3)
+  - Quick (1.3.2)
+  - RxAtomic (4.4.0)
+  - RxCocoa (4.4.0):
     - RxSwift (~> 4.0)
-  - Quick (1.3.1)
-  - RxCocoa (4.2.0):
-    - RxSwift (~> 4.0)
-  - RxEpub (0.0.1):
+  - RxEpub (0.0.2):
     - AEXML
     - "NSObject+Rx"
     - RxCocoa
     - RxSwift
     - RxSwiftExt
     - SSZipArchive
-  - RxSwift (4.2.0)
+  - RxSwift (4.4.0):
+    - RxAtomic (~> 4.4)
   - RxSwiftExt (3.3.0):
     - RxSwiftExt/Core (= 3.3.0)
   - RxSwiftExt/Core (3.3.0):
     - RxSwift (~> 4.0)
-  - SSZipArchive (2.1.3)
+  - SSZipArchive (2.1.4)
 
 DEPENDENCIES:
   - Nimble
@@ -31,6 +33,7 @@ SPEC REPOS:
     - Nimble
     - "NSObject+Rx"
     - Quick
+    - RxAtomic
     - RxCocoa
     - RxSwift
     - RxSwiftExt
@@ -41,15 +44,16 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AEXML: bae92c01e0da64132fd72f748721cda07466032b
-  Nimble: 2839b01d1b31f6a6a7777a221f0d91cf52e8e27b
-  "NSObject+Rx": 9a5eeff5e08156f849fa973514456f28eef08742
-  Quick: d17304d58d0d169dd0bd1c6e5c28e3318de32a1a
-  RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
-  RxEpub: d63c895de8c46758f06dc6351c682ea259c1e143
-  RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
+  AEXML: 601f41fcaa7bda7605cad153b0f43db9ec006c0f
+  Nimble: 04f732da099ea4d153122aec8c2a88fd0c7219ae
+  "NSObject+Rx": 9884a92f19b610795c431e10b4e601913b59c9e9
+  Quick: 2623cb30d7a7f41ca62f684f679586558f483d46
+  RxAtomic: eacf60db868c96bfd63320e28619fe29c179656f
+  RxCocoa: df63ebf7b9a70d6b4eeea407ed5dd4efc8979749
+  RxEpub: ad13da1811f73a5196ce6965b88b4283ceb11a26
+  RxSwift: 5976ecd04fc2fefd648827c23de5e11157faa973
   RxSwiftExt: 81afb48ab0602f503147417baeb3989d64c7687d
-  SSZipArchive: 51a800ebb77f95a8329b6ced1faaff394b47f509
+  SSZipArchive: 41455d4b8d2b6ab93990820b50dc697c2554a322
 
 PODFILE CHECKSUM: 38f24bc56743599889e8c181e5f5d07c01b4ddfa
 

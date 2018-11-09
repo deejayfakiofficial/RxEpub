@@ -177,18 +177,16 @@ open class RxEpubPageController: UIViewController {
 }
 extension RxEpubPageController:UIPageViewControllerDataSource,UIPageViewControllerDelegate{
     public func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        let vc = viewController as! RxEpubViewController
-        if let index = pageIndex(for: vc){
-            return epubViewController(at: index + 1)
+        guard let vc = viewController as? RxEpubViewController,let index = pageIndex(for: vc) else {
+            return nil
         }
-        return nil
+        return epubViewController(at: index + 1)
     }
     public func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        let vc = viewController as! RxEpubViewController
-        if let index = pageIndex(for: vc){
-            return epubViewController(at: index - 1)
+        guard let vc = viewController as? RxEpubViewController,let index = pageIndex(for: vc) else {
+            return nil
         }
-        return nil
+        return epubViewController(at: index - 1)
     }
     public func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         pageViewController.view.isUserInteractionEnabled = false

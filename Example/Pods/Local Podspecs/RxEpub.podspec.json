@@ -1,6 +1,6 @@
 {
   "name": "RxEpub",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "summary": "Epub paser and reader based on RxSwift",
   "description": "'Epub paser and reader based on RxSwift'",
   "homepage": "https://github.com/izhoubin/RxEpub",
@@ -13,12 +13,13 @@
   },
   "source": {
     "git": "https://github.com/izhoubin/RxEpub.git",
-    "tag": "0.0.1"
+    "tag": "0.0.2"
   },
-  "swift_version": "4.0",
+  "swift_version": "4.1",
   "platforms": {
     "ios": "9.0"
   },
+  "requires_arc": true,
   "source_files": [
     "RxEpub/Classes/*.{h,swift}",
     "RxEpub/Classes/**/*.swift"

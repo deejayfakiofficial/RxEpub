@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'RxEpub'
-  s.version          = '0.0.2'
+  s.version          = '0.0.3'
   s.summary          = 'Epub paser and reader based on RxSwift'
 
 # This description is used to generate tags and improve search results.
@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'izhoubin' => '121160492@qq.com' }
   s.source           = { :git => 'https://github.com/izhoubin/RxEpub.git', :tag => s.version.to_s }
-  s.swift_version = '4.1'
+  s.swift_version = '4.2'
   s.ios.deployment_target = '9.0'
   s.requires_arc  = true
   s.authors = { 'izhoubin' => '121160492@qq.com' }
