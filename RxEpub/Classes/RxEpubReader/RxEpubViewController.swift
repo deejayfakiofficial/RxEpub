@@ -47,10 +47,10 @@ class RxEpubViewController: UIViewController {
     func setUpTitle(){
         view.addSubview(titleLab)
         titleLab.translatesAutoresizingMaskIntoConstraints = false
-        let left1 = NSLayoutConstraint(item: titleLab, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.left, multiplier: 1, constant: 20)
-        let right1 = NSLayoutConstraint(item: titleLab, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.right, multiplier: 1, constant: -20)
-        let top1 = NSLayoutConstraint(item: titleLab, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 10)
-        let height1 = NSLayoutConstraint(item: titleLab, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.height, multiplier: 1, constant: 20)
+        let left1 = NSLayoutConstraint(item: titleLab, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 20)
+        let right1 = NSLayoutConstraint(item: titleLab, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: -20)
+        let top1 = NSLayoutConstraint(item: titleLab, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: 10)
+        let height1 = NSLayoutConstraint(item: titleLab, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1, constant: 20)
         titleLab.addConstraint(height1)
         view.addConstraints([left1,right1,top1])
         titleLab.textColor = color
@@ -62,9 +62,9 @@ class RxEpubViewController: UIViewController {
     func setUpTimeLab(){
         view.addSubview(timeLab)
         timeLab.translatesAutoresizingMaskIntoConstraints = false
-        let right4 = NSLayoutConstraint(item: timeLab, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.right, multiplier: 1, constant: -20)
-        let bottom4 = NSLayoutConstraint(item: timeLab, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: -10)
-        let height4 = NSLayoutConstraint(item: timeLab, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.height, multiplier: 1, constant: 20)
+        let right4 = NSLayoutConstraint(item: timeLab, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: -20)
+        let bottom4 = NSLayoutConstraint(item: timeLab, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: -10)
+        let height4 = NSLayoutConstraint(item: timeLab, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1, constant: 20)
         timeLab.addConstraints([height4])
         view.addConstraints([right4,bottom4])
         
@@ -81,10 +81,10 @@ class RxEpubViewController: UIViewController {
     func setUpBattery(){
         view.addSubview(batteryIndicator)
         batteryIndicator.translatesAutoresizingMaskIntoConstraints = false
-        let left3 = NSLayoutConstraint(item: batteryIndicator, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.left, multiplier: 1, constant: 20)
-        let bottom3 = NSLayoutConstraint(item: batteryIndicator, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: -10)
-        let width3 = NSLayoutConstraint(item: batteryIndicator, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.width, multiplier: 1, constant: 25)
-        let height3 = NSLayoutConstraint(item: batteryIndicator, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.height, multiplier: 1, constant: 10)
+        let left3 = NSLayoutConstraint(item: batteryIndicator, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 20)
+        let bottom3 = NSLayoutConstraint(item: batteryIndicator, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: -10)
+        let width3 = NSLayoutConstraint(item: batteryIndicator, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1, constant: 25)
+        let height3 = NSLayoutConstraint(item: batteryIndicator, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1, constant: 10)
         
         UIDevice.current.isBatteryMonitoringEnabled = true
         batteryIndicator.cornerRadius = 1
@@ -102,10 +102,10 @@ class RxEpubViewController: UIViewController {
         automaticallyAdjustsScrollViewInsets = false
         view.addSubview(webView)
         webView.translatesAutoresizingMaskIntoConstraints = false
-        let left2 = NSLayoutConstraint(item: webView, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.left, multiplier: 1, constant: 0)
-        let right2 = NSLayoutConstraint(item: webView, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0)
-        let top2 = NSLayoutConstraint(item: webView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 30)
-        let bottom2 = NSLayoutConstraint(item: webView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: -30)
+        let left2 = NSLayoutConstraint(item: webView, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 0)
+        let right2 = NSLayoutConstraint(item: webView, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: 0)
+        let top2 = NSLayoutConstraint(item: webView, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: 30)
+        let bottom2 = NSLayoutConstraint(item: webView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: -30)
         view.addConstraints([left2,right2,top2,bottom2])
         view.layoutIfNeeded()
     }

@@ -22,7 +22,7 @@ public class RxEpubCatalogViewController: UIViewController {
         view.backgroundColor = UIColor(hexString: RxEpubReader.shared.config.backgroundColor.value)
         
         if self.presentingViewController != nil{
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "关闭", style: UIBarButtonItemStyle.plain, target: self, action: #selector(close))
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "关闭", style: UIBarButtonItem.Style.plain, target: self, action: #selector(close))
         }
         
     }
@@ -45,16 +45,16 @@ public class RxEpubCatalogViewController: UIViewController {
         tableView.dataSource = self
         tableView.cellLayoutMarginsFollowReadableWidth = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.sectionHeaderHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
         tableView.estimatedSectionHeaderHeight = 50
         tableView.estimatedSectionFooterHeight = 0
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        let left = NSLayoutConstraint(item: tableView, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.left, multiplier: 1, constant: 0)
-        let right = NSLayoutConstraint(item: tableView, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0)
-        let top = NSLayoutConstraint(item: tableView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: topLayoutGuide, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
-        let bottom = NSLayoutConstraint(item: tableView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
+        let left = NSLayoutConstraint(item: tableView, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 0)
+        let right = NSLayoutConstraint(item: tableView, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: 0)
+        let top = NSLayoutConstraint(item: tableView, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: topLayoutGuide, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: 0)
+        let bottom = NSLayoutConstraint(item: tableView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: 0)
         view.addConstraints([left,right,top,bottom])
         
         tableView.rx.itemSelected.subscribe(onNext: {[weak self](indexPath) in
@@ -93,23 +93,23 @@ extension RxEpubCatalogViewController:UITableViewDelegate,UITableViewDataSource{
         let bt = UIButton()
         bt.titleLabel?.numberOfLines = 0
         bt.titleLabel?.lineBreakMode = .byWordWrapping
-        bt.setTitleColor(UIColor(hexString: RxEpubReader.shared.config.textColor.value), for: UIControlState.normal)
+        bt.setTitleColor(UIColor(hexString: RxEpubReader.shared.config.textColor.value), for: UIControl.State.normal)
         bt.contentHorizontalAlignment = .left
         bt.titleLabel?.font = UIFont.systemFont(ofSize: RxEpubReader.shared.config.fontSize.value)
         let md = dataArray[section]
-        bt.setTitle(md.title, for: UIControlState.normal)
+        bt.setTitle(md.title, for: UIControl.State.normal)
         header.addSubview(bt)
 
-        bt.rx.controlEvent(UIControlEvents.touchUpInside).subscribe(onNext: {[weak self](_) in
+        bt.rx.controlEvent(UIControl.Event.touchUpInside).subscribe(onNext: {[weak self](_) in
             RxEpubReader.shared.catalogItemClickCallBack?(md)
             self?.close()
         }).disposed(by: rx.disposeBag)
 
         bt.translatesAutoresizingMaskIntoConstraints = false
-        let left = NSLayoutConstraint(item: bt, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: header, attribute: NSLayoutAttribute.left, multiplier: 1, constant: 0)
-        let right = NSLayoutConstraint(item: bt, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: header, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0)
-        let top = NSLayoutConstraint(item: bt, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: header, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-        let bottom = NSLayoutConstraint(item: bt, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: header, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
+        let left = NSLayoutConstraint(item: bt, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: header, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 0)
+        let right = NSLayoutConstraint(item: bt, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.equal, toItem: header, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: 0)
+        let top = NSLayoutConstraint(item: bt, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: header, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: 0)
+        let bottom = NSLayoutConstraint(item: bt, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: header, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: 0)
         header.addConstraints([left,right,top,bottom])
         return header
     }

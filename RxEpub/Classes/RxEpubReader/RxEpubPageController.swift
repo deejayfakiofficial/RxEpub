@@ -12,7 +12,7 @@ import RxSwiftExt
 import NSObject_Rx
 open class RxEpubPageController: UIViewController {
     let scrollDirection:Variable<ScrollDirection> = Variable(.none)
-    let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    let indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     var pageViewController:UIPageViewController!
     var currentViewController:RxEpubViewController? = nil
     var url:URL!
@@ -58,12 +58,12 @@ open class RxEpubPageController: UIViewController {
         }).disposed(by: rx.disposeBag)
     }
     func setUpPageViewController(){
-        let options = [UIPageViewControllerOptionSpineLocationKey:NSNumber(integerLiteral: UIPageViewControllerSpineLocation.min.rawValue)]
-        pageViewController = UIPageViewController(transitionStyle: UIPageViewControllerTransitionStyle.scroll, navigationOrientation: UIPageViewControllerNavigationOrientation.horizontal, options: options)
+        let options = [UIPageViewController.OptionsKey.spineLocation:NSNumber(integerLiteral: UIPageViewController.SpineLocation.min.rawValue)]
+        pageViewController = UIPageViewController(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal, options: options)
         
-        addChildViewController(pageViewController)
+        addChild(pageViewController)
         view.addSubview(pageViewController.view)
-        pageViewController.didMove(toParentViewController: self)
+        pageViewController.didMove(toParent: self)
         
     }
     func setUpIndicator(){
@@ -99,8 +99,8 @@ open class RxEpubPageController: UIViewController {
                 guard let sf = self else{
                     return
                 }
-                let centerX = NSLayoutConstraint(item: lab, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: sf.view, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
-                let centerY = NSLayoutConstraint(item: lab, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: sf.view, attribute: NSLayoutAttribute.centerY, multiplier: 1, constant: 0)
+                let centerX = NSLayoutConstraint(item: lab, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: sf.view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+                let centerY = NSLayoutConstraint(item: lab, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: sf.view, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
                 sf.view.addConstraints([centerX,centerY])
                 NSLayoutConstraint.activate([centerX,centerY])
         }).disposed(by: rx.disposeBag)

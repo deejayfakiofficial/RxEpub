@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 public class RxEpubWebView: WKWebView {
     var tapCallBack:(()->())? = nil
-    let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    let indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     let bag = DisposeBag()
     public convenience init(frame:CGRect) {
         let js = """
@@ -95,7 +95,7 @@ public class RxEpubWebView: WKWebView {
                 sf.catulatePage()
             }).disposed(by: bag)
         
-        NotificationCenter.default.rx.notification(Notification.Name.UIApplicationDidChangeStatusBarOrientation).subscribe(onNext: {[weak self] (_) in
+        NotificationCenter.default.rx.notification(UIApplication.didChangeStatusBarOrientationNotification).subscribe(onNext: {[weak self] (_) in
             self?.reload()
         }).disposed(by: rx.disposeBag)
         
@@ -149,8 +149,8 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
             completionHandler()
             return
         }
-        let alert = UIAlertController(title: "温馨提示", message: message, preferredStyle: UIAlertControllerStyle.alert)
-        let action = UIAlertAction(title: "确定", style: UIAlertActionStyle.cancel) { (_) in
+        let alert = UIAlertController(title: "温馨提示", message: message, preferredStyle: UIAlertController.Style.alert)
+        let action = UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel) { (_) in
             completionHandler()
         }
         alert.addAction(action)
@@ -158,11 +158,11 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
     }
     //confirm弹框
     public func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
-        let alert = UIAlertController(title: "温馨提示", message: message, preferredStyle: UIAlertControllerStyle.alert)
-        let action = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (_) in
+        let alert = UIAlertController(title: "温馨提示", message: message, preferredStyle: UIAlertController.Style.alert)
+        let action = UIAlertAction(title: "确定", style: UIAlertAction.Style.default) { (_) in
             completionHandler(true)
         }
-        let cancelAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel) { (_) in
+        let cancelAction = UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel) { (_) in
             completionHandler(false)
         }
         
@@ -172,9 +172,9 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
     }
     //TextInput弹框
     public func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
-        let alert = UIAlertController(title: "", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "", message: nil, preferredStyle: UIAlertController.Style.alert)
         alert.addTextField { (_) in}
-        let action = UIAlertAction(title: "确定", style: UIAlertActionStyle.default) { (_) in
+        let action = UIAlertAction(title: "确定", style: UIAlertAction.Style.default) { (_) in
             completionHandler(alert.textFields?.last?.text)
         }
         alert.addAction(action)
