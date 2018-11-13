@@ -38,8 +38,6 @@ class ViewController: UIViewController {
         RxEpubReader.shared.clickCallBack = {[weak self] in
             let isHidden = self?.navigationController?.isNavigationBarHidden ?? false
             self?.navigationController?.setNavigationBarHidden(!isHidden, animated: true)
-            vc.setNeedsStatusBarAppearanceUpdate()
-            
 //            UIApplication.shared.isStatusBarHidden = !isHidden
         }
         vc.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "目录", style: UIBarButtonItem.Style.plain, target: self, action: #selector(openCatalog))
