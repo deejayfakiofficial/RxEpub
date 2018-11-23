@@ -79,30 +79,18 @@ open class RxEpubPageController: UIViewController {
     func setUpRx(){
         RxEpubParser(url: url).parse().subscribe(onNext: {[weak self] (book) in
             RxEpubReader.shared.book.value = book
+            self?.title = book.title
             if let vc = self?.epubViewController(at: 0){
                 self?.pageViewController.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
                 self?.indicator.stopAnimating()
                 self?.indicator.removeFromSuperview()
                 self?.pageViewController.delegate = self
                 self?.pageViewController.dataSource = self
+            }else{
+                self?.showError()
             }
-            self?.title = book.title
             },onError:{[weak self] _ in
-                self?.indicator.stopAnimating()
-                self?.indicator.removeFromSuperview()
-                let lab = UILabel()
-                lab.translatesAutoresizingMaskIntoConstraints = false
-                lab.text = "找不到文件!"
-                lab.textColor = UIColor.gray
-                self?.view.addSubview(lab)
-                lab.sizeToFit()
-                guard let sf = self else{
-                    return
-                }
-                let centerX = NSLayoutConstraint(item: lab, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: sf.view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
-                let centerY = NSLayoutConstraint(item: lab, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: sf.view, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
-                sf.view.addConstraints([centerX,centerY])
-                NSLayoutConstraint.activate([centerX,centerY])
+                self?.showError()
         }).disposed(by: rx.disposeBag)
         
         
@@ -144,6 +132,20 @@ open class RxEpubPageController: UIViewController {
             let vc = RxEpubViewController(resource: resource)
             self?.pageViewController.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
         }
+    }
+    func showError(){
+        indicator.stopAnimating()
+        indicator.removeFromSuperview()
+        let lab = UILabel()
+        lab.translatesAutoresizingMaskIntoConstraints = false
+        lab.text = "找不到文件!"
+        lab.textColor = UIColor.gray
+        view.addSubview(lab)
+        lab.sizeToFit()
+        let centerX = NSLayoutConstraint(item: lab, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+        let centerY = NSLayoutConstraint(item: lab, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
+        view.addConstraints([centerX,centerY])
+        NSLayoutConstraint.activate([centerX,centerY])
     }
     func pageIndex(for viewController:RxEpubViewController)->Int?{
         return RxEpubReader.shared.book.value?.spine.spineReferences.map{$0.id}.index(of: viewController.resource.id)

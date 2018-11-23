@@ -16,13 +16,13 @@ class ViewController: UIViewController {
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         //1. Load local epub
-        //let url = Bundle.main.url(forResource: "330151", withExtension: "epub")!
+        let url = Bundle.main.url(forResource: "200015137", withExtension: "epub")!
         
         //2. Load local epub (unziped)
         //let url = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("Epubs").appendingPathComponent("330151")!
         
         //3. Load remote epub
-        let url = URL(string: "http://d18.ixdzs.com/113/113933/113933.epub")!
+//        let url = URL(string: "http://d18.ixdzs.com/113/113933/113933.epub")!
         //let url = URL(string: "http://localhost/330151.epub")!
         
         //4. Load remote epub （unziped）

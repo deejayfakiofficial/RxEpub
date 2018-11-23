@@ -64,7 +64,7 @@ public class RxEpubParser: NSObject {
         let containerPath = "META-INF/container.xml"
         let containerUrl = rootUrl.appendingPathComponent(containerPath)
         return read(url: containerUrl).flatMap {
-                self.parseContainer(container: $0)
+            self.parseContainer(container: $0)
             }.flatMap { (href) -> Observable<AEXMLDocument> in
                 let opfUrl = rootUrl.appendingPathComponent(href)
                 self.resourcesBaseUrl = opfUrl.deletingLastPathComponent()
@@ -77,18 +77,17 @@ public class RxEpubParser: NSObject {
                 self.parseToc(toc: toc)
                 return Observable.just(self.book)
             }.observeOn(MainScheduler.asyncInstance)
-        
     }
     private func download(url:URL)->Observable<URL>{
         return Observable.create {(observer) -> Disposable in
             let task = URLSession.shared.downloadTask(with: url){ (localUrl, response, err) in
                 if let localUrl = localUrl{
                     let dest = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first!.appendingPathComponent("Epubs").appendingPathComponent(url.lastPathComponent)
-
+                    
                     if !FileManager.default.fileExists(atPath: dest.deletingLastPathComponent().path) {
                         try? FileManager.default.createDirectory(at: dest.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
                     }
-
+                    
                     try? FileManager.default.moveItem(at: localUrl, to: dest)
                     observer.onNext(dest)
                 }else{
@@ -121,7 +120,9 @@ public class RxEpubParser: NSObject {
                 return Disposables.create()
             }else{//远程文件
                 let task = URLSession.shared.dataTask(with: url) { (data, _, err) in
-                    if let data = data,let xmlDoc = try? AEXMLDocument(xml: data){
+                    var options = AEXMLOptions()
+                    options.parserSettings.shouldProcessNamespaces = true
+                    if let data = data,let xmlDoc = try? AEXMLDocument(xml: data,options:options){
                         observer.onNext(xmlDoc)
                         observer.onCompleted()
                     }else{
@@ -179,7 +180,6 @@ public class RxEpubParser: NSObject {
         // Read Spine
         let spine = opf.root["spine"]
         let tocItemIdref = spine.attributes["toc"]
-        
         book.tocResource = book.resources.findById(tocItemIdref)
         
         book.spine = readSpine(spine.children)
@@ -218,6 +218,7 @@ public class RxEpubParser: NSObject {
         var tableOfContent = [TocReference]()
         var tocItems: [AEXMLElement]?
         guard let tocResource = book.tocResource else {
+            book.tableOfContents = tableOfContent
             return Observable.just(tableOfContent)
         }
         if tocResource.mediaType == MediaType.ncx {
@@ -233,6 +234,7 @@ public class RxEpubParser: NSObject {
         }
         
         guard let items = tocItems else {
+            book.tableOfContents = tableOfContent
             return Observable.just(tableOfContent)
         }
         
