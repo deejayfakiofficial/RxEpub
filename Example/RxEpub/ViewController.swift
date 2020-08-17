@@ -27,7 +27,6 @@ class ViewController: UIViewController {
         
         //4. Load remote epub （unziped）
         //let url =  URL(string:"http://localhost/330151")!
-//        let url = URL(string:"http://mebookj.magook.com/epub1/14887/14887-330151/330151_08e3035f")!
         
 //        RxEpubParser(url: url).parse().subscribe(onNext: { (book) in
 //            print("name",book.name ?? "")

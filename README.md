@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/cocoapods/v/RxEpub.svg?style=flat)](http://cocoapods.org/pods/RxEpub)
 [![License](https://img.shields.io/cocoapods/l/RxEpub.svg?style=flat)](http://cocoapods.org/pods/RxEpub)
 [![Platform](https://img.shields.io/cocoapods/p/RxEpub.svg?style=flat)](http://cocoapods.org/pods/RxEpub)
-[![Swift](https://img.shields.io/badge/Swift-4.1-brightgreen.svg)](http://cocoapods.org/pods/RxEpub)
+[![Swift](https://img.shields.io/badge/Swift-5.0-brightgreen.svg)](http://cocoapods.org/pods/RxEpub)
 
 ## Example
 
@@ -20,7 +20,7 @@ let url = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDi
 ```
 #### 3. Load remote epub
 ```
-let url = URL(string: "http://localhost/330151.epub")
+let url = URL(string: "http://d18.ixdzs.com/113/113933/113933.epub")
 ```
 #### 4. Load remote epub （unziped）
 ```
@@ -43,8 +43,8 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
-- iOS 9.0+
-- Xcode 9+
+- iOS 10.0+
+- Xcode 10+
 
 ## Installation
 
