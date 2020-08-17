@@ -9,16 +9,15 @@
 
 import UIKit
 
-@IBDesignable
 open class BatteryView: UIView {
 
     // MARK: - Behavior Properties
 
     /// 0 to 100 percent full, unavailable = -1
-    @IBInspectable open var level: Int = -1 { didSet { layoutLevel() } }
+    open var level: Int = -1 { didSet { layoutLevel() } }
 
     /// change color when level crosses the threshold
-    @IBInspectable open var lowThreshold: Int = 10 { didSet { layoutFillColor() } }
+    open var lowThreshold: Int = 10 { didSet { layoutFillColor() } }
 
     // MARK: - Appearance Properties
 
@@ -26,20 +25,20 @@ open class BatteryView: UIView {
     open var direction: CGRectEdge = .minYEdge { didSet { setNeedsLayout() } }
 
     /// simplified direction of battery terminal (for Interface Builder)
-    @IBInspectable open var isVertical: Bool {
+    open var isVertical: Bool {
         get { return direction == .maxYEdge || direction == .minYEdge }
         set { direction = newValue ? .minYEdge : .maxXEdge }
     }
 
     // relative size of  battery terminal
-    @IBInspectable open var terminalLengthRatio: CGFloat = 0.05 { didSet { setNeedsLayout() } }
-    @IBInspectable open var terminalWidthRatio: CGFloat = 0.4 { didSet { setNeedsLayout() } }
+    open var terminalLengthRatio: CGFloat = 0.05 { didSet { setNeedsLayout() } }
+    open var terminalWidthRatio: CGFloat = 0.4 { didSet { setNeedsLayout() } }
 
-    @IBInspectable open var highLevelColor: UIColor = UIColor(red: 0.0, green: 0.9, blue: 0.0, alpha: 1) { didSet { layoutFillColor() } }
-    @IBInspectable open var lowLevelColor: UIColor = UIColor(red: 0.9, green: 0.0, blue: 0.0, alpha: 1) { didSet { layoutFillColor() } }
-    @IBInspectable open var noLevelColor: UIColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1) { didSet { layoutFillColor() } }
+    open var highLevelColor: UIColor = UIColor(red: 0.0, green: 0.9, blue: 0.0, alpha: 1) { didSet { layoutFillColor() } }
+    open var lowLevelColor: UIColor = UIColor(red: 0.9, green: 0.0, blue: 0.0, alpha: 1) { didSet { layoutFillColor() } }
+    open var noLevelColor: UIColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1) { didSet { layoutFillColor() } }
 
-    @IBInspectable open var borderColor: UIColor = .black {
+    open var borderColor: UIColor = .black {
         didSet {
             bodyOutline.borderColor = borderColor.cgColor
             terminalOutline.borderColor = borderColor.cgColor
@@ -47,10 +46,10 @@ open class BatteryView: UIView {
     }
 
     /// set as 0 for default borderWidth = length / 20
-    @IBInspectable open var borderWidth: CGFloat = 0 { didSet { layoutBattery(); layoutLevel() } }
+    open var borderWidth: CGFloat = 0 { didSet { layoutBattery(); layoutLevel() } }
 
     /// set as 0 for default cornerRadius = length / 10
-    @IBInspectable open var cornerRadius: CGFloat = 0 { didSet { layoutCornerRadius() } }
+    open var cornerRadius: CGFloat = 0 { didSet { layoutCornerRadius() } }
 
     // MARK: - Overrides
 

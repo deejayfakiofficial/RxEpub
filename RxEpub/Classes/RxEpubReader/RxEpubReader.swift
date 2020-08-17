@@ -7,31 +7,25 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 enum ScrollType: Int {
     case page
     case chapter
 }
 
-enum ScrollDirection: Int {
-    case none
-    case right
-    case left
-}
 //public struct Page {
 //    public var chapter:Int
 //    public var page:Int
 //}
 public class RxEpubReader: NSObject {
     private static var reader:RxEpubReader? = nil
-    
-    var scrollDirection:ScrollDirection = .none
     public var catalogItemClickCallBack:((TocReference)->())? = nil
     
-    public let currentChapter:Variable<Int> = Variable(0)
-    public let currentPage:Variable<Int> = Variable(0)
+    public let currentChapter:BehaviorRelay<Int> = BehaviorRelay(value:0)
+    public let currentPage:BehaviorRelay<Int> = BehaviorRelay(value:0)
     public var config:RxEpubConfig! = RxEpubConfig()
     public var clickCallBack:(()->())? = nil
-    public var book:Variable<Book?> = Variable(nil)
+    public var book:BehaviorRelay<Book?> = BehaviorRelay(value:nil)
     public static var shared:RxEpubReader{
         if reader == nil{
             reader = RxEpubReader()

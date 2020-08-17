@@ -7,6 +7,8 @@
 
 import UIKit
 private let KHybridNSURLProtocolHKey = "KHybridNSURLProtocol"
+
+/// 为了实现远程文件加载本地js，css
 class RxEpubURLProtocol: URLProtocol,URLSessionDelegate,URLSessionDataDelegate,URLSessionTaskDelegate {
     var rxTask: URLSessionTask? = nil
     override class func canInit(with request: URLRequest) -> Bool{

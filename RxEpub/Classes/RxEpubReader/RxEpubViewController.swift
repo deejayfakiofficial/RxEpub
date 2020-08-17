@@ -15,6 +15,7 @@ class RxEpubViewController: UIViewController {
     let batteryIndicator = BatteryView()
     let timeLab = UILabel()
     let color = UIColor(hexString: "#818181")!
+    let disposeBag = DisposeBag()
     weak var timer:Timer? = nil
     init(resource:Resource){
         super.init(nibName: nil, bundle: nil)
@@ -57,7 +58,7 @@ class RxEpubViewController: UIViewController {
         titleLab.font = UIFont.systemFont(ofSize: 15)
         webView.rx.title
             .bind(to: titleLab.rx.text)
-            .disposed(by: rx.disposeBag)
+            .disposed(by: disposeBag)
     }
     func setUpTimeLab(){
         view.addSubview(timeLab)
@@ -122,6 +123,10 @@ class RxEpubViewController: UIViewController {
     }
     @objc func tap(){
         RxEpubReader.shared.clickCallBack?()
+    }
+    deinit {
+        timer?.invalidate()
+        timer = nil
     }
 }
 extension RxEpubViewController:UIGestureRecognizerDelegate{

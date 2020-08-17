@@ -26,8 +26,8 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'izhoubin' => '121160492@qq.com' }
   s.source           = { :git => 'https://github.com/izhoubin/RxEpub.git', :tag => s.version.to_s }
-  s.swift_version = '4.2'
-  s.ios.deployment_target = '9.0'
+  s.swift_version = '5.0'
+  s.ios.deployment_target = '10.0'
   s.requires_arc  = true
   s.authors = { 'izhoubin' => '121160492@qq.com' }
   s.source_files = [
@@ -43,23 +43,21 @@ Pod::Spec.new do |s|
   # }
   # s.public_header_files = 'Pod/Source/**/*.h'
 
-  # s.subspec 'RxEpubPaser' do |rxEpubPaser|
-  #     rxEpubPaser.source_files = 'RxEpub/Source/RxEpubPaser/**/*'
-  #     rxEpubPaser.public_header_files = 'RxEpub/Source/RxEpubPaser/**/*.h'
-  #     rxEpubPaser.dependency 'SSZipArchive', '2.1.1'
-  #     rxEpubPaser.dependency 'AEXML', '4.2.2'
+  # s.subspec 'Paser' do |paser|
+  #     paser.source_files = 'RxEpub/Source/RxEpubPaser/**/*'
+  #     paser.public_header_files = 'RxEpub/Source/RxEpubPaser/**/*.h'
+  #     paser.dependency 'SSZipArchive', '2.1.1'
+  #     paser.dependency 'AEXML', '4.2.2'
   # end
 
-  # s.subspec 'RxEpubReader' do |rxEpubReader|
-      # rxEpubReader.source_files = 'RxEpub/Source/RxEpubReader/**/*'
-      # rxEpubReader.public_header_files = 'RxEpub/Source/RxEpubReader/**/*.h'
+  # s.subspec 'Reader' do |reader|
+      # reader.source_files = 'RxEpub/Source/RxEpubReader/**/*'
+      # reader.public_header_files = 'RxEpub/Source/RxEpubReader/**/*.h'
   # end
   s.dependency 'SSZipArchive'
   s.dependency 'RxSwift'
   s.dependency 'RxCocoa'
   s.dependency 'AEXML'
-  s.dependency 'NSObject+Rx'
-  s.dependency 'RxSwiftExt'
   s.frameworks = 'UIKit'
   
 end

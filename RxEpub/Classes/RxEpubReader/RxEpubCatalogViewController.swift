@@ -6,17 +6,19 @@
 //
 
 import UIKit
+import RxSwift
 public class RxEpubCatalogViewController: UIViewController {
 
     let tableView = UITableView()
     var dataArray:[TocReference] = []
+    let disposeBag = DisposeBag()
     override open func viewDidLoad() {
         super.viewDidLoad()
         setUpTable()
-        RxEpubReader.shared.book.asObservable().unwrap().subscribe(onNext: {[weak self] (book) in
+        RxEpubReader.shared.book.asObservable().compactMap{$0}.subscribe(onNext: {[weak self] (book) in
             self?.dataArray = book.tableOfContents
             self?.tableView.reloadData()
-        }).disposed(by: rx.disposeBag)
+        }).disposed(by: disposeBag)
         
         title = "目录"
         view.backgroundColor = UIColor(hexString: RxEpubReader.shared.config.backgroundColor.value)
@@ -62,7 +64,7 @@ public class RxEpubCatalogViewController: UIViewController {
                 RxEpubReader.shared.catalogItemClickCallBack?(md)
                 self?.close()
             }
-        }).disposed(by: rx.disposeBag)
+        }).disposed(by: disposeBag)
     }
 }
 extension RxEpubCatalogViewController:UITableViewDelegate,UITableViewDataSource{
@@ -103,7 +105,7 @@ extension RxEpubCatalogViewController:UITableViewDelegate,UITableViewDataSource{
         bt.rx.controlEvent(UIControl.Event.touchUpInside).subscribe(onNext: {[weak self](_) in
             RxEpubReader.shared.catalogItemClickCallBack?(md)
             self?.close()
-        }).disposed(by: rx.disposeBag)
+        }).disposed(by: disposeBag)
 
         bt.translatesAutoresizingMaskIntoConstraints = false
         let left = NSLayoutConstraint(item: bt, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: header, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 0)

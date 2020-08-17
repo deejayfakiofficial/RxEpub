@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class SmilElement: NSObject {
     var name: String // the name of the tag: <seq>, <par>, <text>, <audio>
     var attributes: [String: String]!

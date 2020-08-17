@@ -26,6 +26,13 @@ let url = URL(string: "http://localhost/330151.epub")
 ```
 let url =  URL(string:"http://localhost/330151")
 ```
+### 5 . Parse epub
+```
+RxEpubParser(url: url).parse().subscribe(onNext: {[weak self] (book) in
+    print(book.title)
+    print(book.author)
+}
+```
 ####  Open reader
 ```
 let vc = RxEpubPageController(url:url)

@@ -36,18 +36,18 @@ internal extension URLProtocol {
 }
 
 internal extension Reactive where Base: WKWebView {
-    internal var loading: Observable<Bool> {
+    var loading: Observable<Bool> {
         return self.observeWeakly(Bool.self, "loading")
             .map { $0 ?? false }
     }
-    internal var title: Observable<String> {
+    var title: Observable<String> {
         return self.observeWeakly(String.self, "title")
             .map { $0 ?? "" }
     }
 }
 internal extension UIPageViewController {
     
-    internal var scrollView: UIScrollView? {
+    var scrollView: UIScrollView? {
         get {
             for subview in self.view.subviews {
                 if let scrollView = subview as? UIScrollView {
@@ -59,13 +59,13 @@ internal extension UIPageViewController {
     }
 }
 internal extension UIColor{
-    internal static var random: UIColor {
+    static var random: UIColor {
         let red = CGFloat(arc4random_uniform(255))/255.0
         let green = CGFloat(arc4random_uniform(255))/255.0
         let blue = CGFloat(arc4random_uniform(255))/255.0
         return UIColor(red: red, green: green, blue: blue, alpha: 1)
     }
-    internal convenience init?(hexString: String, transparency: CGFloat = 1) {
+    convenience init?(hexString: String, transparency: CGFloat = 1) {
         var string = ""
         if hexString.lowercased().hasPrefix("0x") {
             string =  hexString.replacingOccurrences(of: "0x", with: "")

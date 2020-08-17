@@ -10,34 +10,46 @@ import WebKit
 import RxSwift
 import RxCocoa
 public class RxEpubWebView: WKWebView {
+    enum ScrollDestination {
+        case top
+        case bottom
+    }
     var tapCallBack:(()->())? = nil
     let indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     let bag = DisposeBag()
+    let scrollSubject = PublishSubject<ScrollDestination>()
+    var totalPage:BehaviorRelay<Int> = BehaviorRelay(value: 0)
+    let disposeBag = DisposeBag()
     public convenience init(frame:CGRect) {
         let js = """
+        var html = document.querySelector('html');
+        
+        html.style['-webkit-column-width']=window.innerWidth+'px'
+        html.style['color']='\(RxEpubReader.shared.config.textColor.value)';
+        html.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value/3.0*4.0))'+'px';
+        
         var head = document.querySelector('head');
 
         var meta = document.createElement('meta');
         meta.setAttribute('name', 'viewport');
         meta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
         head.appendChild(meta);
-
-        var script = document.createElement('script');
-        script.setAttribute('type', 'text/javascript');
-        script.setAttribute('src', 'https://RxEpub/Bridge.js');
-        head.appendChild(script);
         
         var link = document.createElement('link');
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('href', 'https://RxEpub/Style.css');
         head.appendChild(link);
-
-        var html = document.querySelector('html');
-        html.style['-webkit-column-width']=window.innerWidth+'px'
         
-        html.style['color']='\(RxEpubReader.shared.config.textColor.value)';
-        html.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value/3.0*4.0))'+'px';
+        var body = document.querySelector('body');
+        
+
+        var script = document.createElement('script');
+        script.setAttribute('type', 'text/javascript');
+        script.setAttribute('src', 'https://RxEpub/Bridge.js');
+        body.appendChild(script);
+        
         var a = document.querySelector('a');
+        
         if (a){
             a['color']='\(RxEpubReader.shared.config.textColor.value)';
             a.style['font-size']='\(Int(RxEpubReader.shared.config.fontSize.value/3.0*4.0))'+'px'
@@ -46,10 +58,11 @@ public class RxEpubWebView: WKWebView {
         document.documentElement.style.webkitTouchCallout='none';
         
         """
-        //'html','height: window.innerHeight; -webkit-column-gap: 0px; -webkit-column-width: window.innerWidth;
+        
         let uerScript = WKUserScript(source: js, injectionTime: WKUserScriptInjectionTime.atDocumentEnd, forMainFrameOnly: true)
         let controller = WKUserContentController()
         controller.addUserScript(uerScript)
+        
         let config = WKWebViewConfiguration()
         config.userContentController = controller
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
@@ -64,6 +77,7 @@ public class RxEpubWebView: WKWebView {
             config.requiresUserActionForMediaPlayback = false
         }
         self.init(frame: frame, configuration: config)
+        controller.add(self, name: "Native")
         
         setUpUI()
         setUpRx()
@@ -72,8 +86,8 @@ public class RxEpubWebView: WKWebView {
         isOpaque = false
         uiDelegate = self
         navigationDelegate = self
-        scrollView.isPagingEnabled = true
         scrollView.bounces = false
+        scrollView.isPagingEnabled = true
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.backgroundColor = UIColor.clear
@@ -97,28 +111,25 @@ public class RxEpubWebView: WKWebView {
         
         NotificationCenter.default.rx.notification(UIApplication.didChangeStatusBarOrientationNotification).subscribe(onNext: {[weak self] (_) in
             self?.reload()
-        }).disposed(by: rx.disposeBag)
+        }).disposed(by: disposeBag)
         
-        rx.loading.asObservable().subscribe(onNext: {[weak self] in
-            guard let sf = self,!$0 else{
-                return
-            }
-            if RxEpubReader.shared.scrollDirection == .right {
-                sf.scrollsToBottom()
+        Observable.combineLatest(scrollSubject, totalPage).subscribe(onNext: {[weak self] in
+            if $1>0 && $0 == .bottom{
+                self?.scrollTo(page: $1)
             }else{
-                sf.scrollsToTop()
+                self?.scrollTo(page: 0)
             }
-            
-            sf.indicator.stopAnimating()
-            
-        }).disposed(by: rx.disposeBag)
+        }).disposed(by:bag)
     }
     func catulatePage(){
-        guard scrollView.frame.width > 0 else{
-            return
-        }
-        let pageIndex = scrollView.contentOffset.x/scrollView.frame.width
-        RxEpubReader.shared.currentPage.value = Int(pageIndex)
+        let js = "document.documentElement.scrollLeft"
+        evaluateJavaScript(js, completionHandler: {[weak self](left ,error) in
+            if let left = left as? CGFloat,let sf = self{
+                let pageIndex = left/sf.scrollView.frame.width
+                RxEpubReader.shared.currentPage.accept(Int(pageIndex))
+            }
+            
+        })
     }
     
     public override func layoutSubviews() {
@@ -184,22 +195,21 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
         decisionHandler(.allow)
     }
     public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        print("didFailProvisionalNavigation:",error)
+//        print("didFailProvisionalNavigation:",error)
     }
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        print("didFailnavigation:",error)
+//        print("didFailnavigation:",error)
     }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-//        if RxEpubReader.shared.scrollDirection == .right {
-//            scrollsToBottom()
-//        }else{
-//            scrollsToTop()
-//        }
-//        indicator.stopAnimating()
-//        let page = scrollView.contentOffset.x/scrollView.frame.width
-//        Log("p2:\(page)")
-//        RxEpubReader.shared.currentPage.value = Int(page)
-//        catulatePage()
+        indicator.stopAnimating()
+        webView.evaluateJavaScript("document.documentElement.scrollWidth") {[weak self] (width, err) in
+            if let width = width as? CGFloat{
+                let page = width/UIScreen.main.bounds.width
+                self?.totalPage.accept(Int(page))
+            }
+            self?.catulatePage()
+        }
+        catulatePage()
     }
     func updateCss(){
         let js = """
@@ -219,33 +229,21 @@ extension RxEpubWebView:WKUIDelegate,WKNavigationDelegate{
         })
     }
     func scrollTo(page:Int){
-        
-        rx.loading.asObservable().subscribe(onNext: {[weak self] in
-            guard let sf = self ,!$0 else{
-                return
-            }
-            
-            DispatchQueue.main.async {
-                let js = """
-                document.body.scrollTo(\(sf.scrollView.frame.width * CGFloat(page)),0);
-                """
-                self?.evaluateJavaScript(js, completionHandler:nil)
-            }
-        }).disposed(by: rx.disposeBag)
+        print(page)
+        let offset = UIScreen.main.bounds.width*CGFloat(page)
+        let js = "document.documentElement.scrollLeft=\(offset)"
+        evaluateJavaScript(js, completionHandler: nil)
     }
     
     func scrollsToBottom(){
-        let js = """
-                document.body.scrollTop =  document.body.scrollHeight;
-                document.body.scrollLeft =  document.body.scrollWidth;
-                """
-        evaluateJavaScript(js, completionHandler: nil)
+        scrollSubject.onNext(.bottom)
     }
     func scrollsToTop(){
-        let js = """
-                document.body.scrollTop =  0;
-                document.body.scrollLeft =  0;
-                """
-        evaluateJavaScript(js, completionHandler: nil)
+        scrollSubject.onNext(.top)
+    }
+}
+extension RxEpubWebView:WKScriptMessageHandler{
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        print("message",message.body)
     }
 }

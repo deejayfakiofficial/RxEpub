@@ -20,17 +20,14 @@ public class RxEpubParser: NSObject {
     }
     
     public func parse()->Observable<Book>{
-        
-        if rootUrl.isFileURL {//本地文件
-            var isDir:ObjCBool = false
-            if FileManager.default.fileExists(atPath: rootUrl.path, isDirectory: &isDir){
-                if isDir.boolValue == false{
-                    return unzip(from: rootUrl).flatMap({
-                        return self.readContainer(rootUrl: $0)
-                    })
-                }else{
-                    return readContainer(rootUrl: rootUrl)
-                }
+        let local = getLocalEpubDirectory().appendingPathComponent(rootUrl.deletingPathExtension().lastPathComponent)
+        if FileManager.default.fileExists(atPath: local.path){//已经解压
+            return readContainer(rootUrl: local)
+        }else if rootUrl.isFileURL {//本地epub文件
+            if FileManager.default.fileExists(atPath: rootUrl.path){
+                return unzip(from: rootUrl).flatMap({
+                    return self.readContainer(rootUrl: $0)
+                })
             }else{
                 Log("Failed: file not exsit at url:\(rootUrl.absoluteString)")
                 return Observable.error(ParseError.fileNotExist(url: rootUrl.absoluteString))
@@ -47,14 +44,18 @@ public class RxEpubParser: NSObject {
             }
         }
     }
+    private func getLocalEpubDirectory()->URL{
+        return FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).last!.appendingPathComponent("Epubs")
+    }
     
     private func unzip(from url: URL)->Observable<URL>{
         Log("unzip epub at path: \(url)")
-        let unzipFile = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).last!.appendingPathComponent("Epubs").appendingPathComponent(rootUrl.deletingPathExtension().lastPathComponent)
+        let unzipFile = getLocalEpubDirectory().appendingPathComponent(url.deletingPathExtension().lastPathComponent)
         
         if SSZipArchive.unzipFile(atPath: url.path, toDestination: unzipFile.path, delegate: nil){
             Log("unzip finished:\(unzipFile.path)")
             try? FileManager.default.removeItem(at: url)
+            Log("remove file:\(url.path)")
             return Observable.just(unzipFile)
         }
         Log("unzip failed.")
@@ -65,18 +66,18 @@ public class RxEpubParser: NSObject {
         let containerUrl = rootUrl.appendingPathComponent(containerPath)
         return read(url: containerUrl).flatMap {
             self.parseContainer(container: $0)
-            }.flatMap { (href) -> Observable<AEXMLDocument> in
-                let opfUrl = rootUrl.appendingPathComponent(href)
-                self.resourcesBaseUrl = opfUrl.deletingLastPathComponent()
-                return self.read(url:opfUrl)
-            }.flatMap{opf -> Observable<URL> in
-                self.parseOpf(opf: opf)
-            }.flatMap{tocUrl -> Observable<AEXMLDocument> in
-                return self.read(url:tocUrl)
-            }.flatMap{toc -> Observable<Book> in
-                self.parseToc(toc: toc)
-                return Observable.just(self.book)
-            }.observeOn(MainScheduler.asyncInstance)
+        }.flatMap { (href) -> Observable<AEXMLDocument> in
+            let opfUrl = rootUrl.appendingPathComponent(href)
+            self.resourcesBaseUrl = opfUrl.deletingLastPathComponent()
+            return self.read(url:opfUrl)
+        }.flatMap{opf -> Observable<URL> in
+            self.parseOpf(opf: opf)
+        }.flatMap{tocUrl -> Observable<AEXMLDocument> in
+            return self.read(url:tocUrl)
+        }.flatMap{toc -> Observable<Book> in
+            self.parseToc(toc: toc)
+            return Observable.just(self.book)
+        }.observeOn(MainScheduler.asyncInstance)
     }
     private func download(url:URL)->Observable<URL>{
         return Observable.create {(observer) -> Disposable in

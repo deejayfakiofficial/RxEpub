@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class Book: NSObject {
+public class Book: NSObject {
     var metadata = Metadata()
     public var spine = Spine()
     var smils = Smils()
@@ -29,7 +29,7 @@ open class Book: NSObject {
         return metadata.titles.first
     }
 
-    var authorName: String? {
+    var author: String? {
         return metadata.creators.first?.name
     }
 
